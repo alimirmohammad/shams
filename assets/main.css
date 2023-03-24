@@ -1,0 +1,52 @@
+@import url('./font.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'IRANSansX', system-ui, sans-serif;
+  }
+}
+
+.headline-1 {
+  @apply text-[22px] font-medium;
+  line-height: 33px;
+}
+.headline-2 {
+  @apply text-[20px] font-medium;
+  line-height: 30px;
+}
+.headline-3 {
+  @apply text-[18px] font-medium;
+  line-height: 27px;
+}
+.label-1 {
+  @apply text-[18px] font-medium;
+  line-height: 27px;
+}
+.label-2 {
+  @apply text-[16px] font-medium;
+  line-height: 24px;
+}
+.label-3 {
+  @apply text-[14px] font-medium;
+  line-height: 21px;
+}
+.label-4 {
+  @apply text-[12px] font-medium;
+  line-height: 18px;
+}
+.body-1 {
+  @apply text-[16px] font-normal;
+  line-height: 24px;
+}
+.body-2 {
+  @apply text-[14px] font-normal;
+  line-height: 21px;
+}
+.body-3 {
+  @apply text-[12px] font-normal;
+  line-height: 18px;
+}
