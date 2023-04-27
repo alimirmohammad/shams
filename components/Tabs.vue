@@ -6,7 +6,7 @@
       @click="$emit('update:modelValue', tab.value)"
       class="tab text-primary-900"
       :class="{
-        'bg-white border-2 border-primary-600': modelValue === tab.value,
+        'bg-white border-2 border-primary-500': modelValue === tab.value,
       }"
     >
       {{ tab.label }}

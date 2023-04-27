@@ -3,7 +3,7 @@
     <div class="h-[300px] bg-white relative top-sheet">
       <Logo class="absolute top-20 left-1/2 -translate-x-1/2" />
     </div>
-    <div class="text-white h-full text-center">
+    <div class="text-white text-center">
       <h1 class="font-bold text-5xl my-10">شمس</h1>
       <div class="relative">
         <Suitcase class="mx-auto" />
