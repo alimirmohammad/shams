@@ -35,9 +35,7 @@
         <Eye />
       </template>
     </Input>
-    <button type="submit" class="btn btn-primary btn-block label-1">
-      ورود
-    </button>
+    <Button type="submit" block> ورود </Button>
   </div>
 </template>
 

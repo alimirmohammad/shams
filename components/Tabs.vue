@@ -2,30 +2,26 @@
   <div class="tabs tabs-boxed bg-primary-50 w-max">
     <div
       v-for="tab in tabs"
-      :key="tab.value"
-      @click="$emit('update:modelValue', tab.value)"
-      class="tab text-primary-900"
+      :key="tab.to"
+      class="tab text-primary-900 px-11 headline-3"
       :class="{
-        'bg-white border-2 border-primary-500': modelValue === tab.value,
+        'bg-white border-2 border-primary-500': activeTab === tab.to,
       }"
     >
-      {{ tab.label }}
+      <NuxtLink :to="tab.to">
+        {{ tab.label }}
+      </NuxtLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-type Tab = { label: string; value: string };
+type Tab = { label: string; to: string };
 
 type Props = {
   tabs: Tab[];
-  modelValue: string;
-};
-
-type Emits = {
-  (e: 'update:modelValue', tab: string): void;
+  activeTab: string;
 };
 
 defineProps<Props>();
-defineEmits<Emits>();
 </script>
