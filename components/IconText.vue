@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col items-center gap-2">
+  <button class="flex flex-col items-center gap-2">
     <slot />
     <p :class="['body-3', neutral ? 'text-gray-300' : 'text-primary-500']">
       {{ title }}
     </p>
-  </div>
+  </button>
 </template>
 
 <script setup lang="ts">

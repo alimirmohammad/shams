@@ -2,7 +2,9 @@
   <div class="page">
     <Header :title="title">
       <template #startAction>
-        <ArrowRightIcon />
+        <IconButton>
+          <ArrowRightIcon />
+        </IconButton>
       </template>
       <template #endAction>
         <IconText title="ویرایش">

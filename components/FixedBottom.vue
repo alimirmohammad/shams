@@ -1,12 +1,22 @@
 <template>
-  <div class="fixed-bottom">
+  <div
+    class="calc-width absolute"
+    :class="hasBottomSheet ? 'bottom-20' : 'bottom-6'"
+  >
     <slot />
   </div>
 </template>
 
+<script setup lang="ts">
+type Props = {
+  hasBottomSheet?: boolean;
+};
+
+defineProps<Props>();
+</script>
+
 <style scoped>
-.fixed-bottom {
-  @apply absolute bottom-6;
+.calc-width {
   width: calc(100% - 2rem);
 }
 </style>
