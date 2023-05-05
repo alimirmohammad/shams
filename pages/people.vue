@@ -7,7 +7,7 @@
         </IconText>
       </template>
     </Header>
-    <main class="bg-white text-center overflow-auto shadow-xl p-4">
+    <main class="bg-white text-center overflow-auto p-4">
       <PriceSummary
         title="ارزش کل صندق"
         :price="2_500_000_000"

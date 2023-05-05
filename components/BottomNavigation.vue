@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-[#F1F1F1] flex flex-row justify-around items-center py-1">
+  <footer class="bg-white border-t border-gray-100 flex flex-row justify-around items-center py-1">
     <NuxtLink to="/people">
       <IconText title="سهام‌داران" :neutral="routeName !== 'people'">
         <PersonIcon :neutral="routeName !== 'people'" />
