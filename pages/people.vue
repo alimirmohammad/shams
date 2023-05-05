@@ -2,7 +2,7 @@
   <div class="page">
     <Header title="سهام‌داران">
       <template #startAction>
-        <IconText title="افزودن">
+        <IconText title="افزودن" @click="open = true">
           <AddIcon />
         </IconText>
       </template>
@@ -34,11 +34,15 @@
       </ul>
     </main>
     <BottomNavigation />
+    <BottomSheet :open="open" @close="open = false">
+      <EditPerson @close="open = false" />
+    </BottomSheet>
   </div>
 </template>
 
 <script setup lang="ts">
 const query = ref('');
+const open = ref(false);
 </script>
 
 <style scoped>
