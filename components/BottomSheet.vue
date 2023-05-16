@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      class="modal modal-bottom"
+      class="modal modal-bottom max-w-md m-auto"
       :class="{ 'modal-open': open }"
       @click.self="$emit('close')"
     >
