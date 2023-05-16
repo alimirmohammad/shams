@@ -3,7 +3,15 @@
     <label :for="id" class="label">
       <span class="label-text label-3 text-gray-500">{{ label }}</span>
     </label>
+    <textarea
+      v-if="multiline"
+      :id="id"
+      v-bind="$attrs"
+      class="textarea textarea-bordered textarea-primary textarea-lg w-full"
+      :class="inputClass"
+    />
     <input
+      v-else
       :id="id"
       v-bind="$attrs"
       class="input input-bordered input-primary w-full"
@@ -30,6 +38,7 @@ type Props = {
   errorText?: string;
   inputClass?: string;
   containerClass?: string;
+  multiline?: boolean;
 };
 
 type Emits = {
@@ -45,5 +54,3 @@ export default defineComponent({
   inheritAttrs: false,
 });
 </script>
-
-<style scoped></style>

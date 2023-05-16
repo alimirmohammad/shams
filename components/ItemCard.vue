@@ -10,8 +10,12 @@
       </span>
       <div class="flex flex-row items-center gap-5">
         <span class="body-2 text-gray-900">{{ date }}</span>
-        <DeleteIcon />
-        <EditIcon />
+        <button @click="$emit('delete')">
+          <DeleteIcon />
+        </button>
+        <button>
+          <EditIcon />
+        </button>
       </div>
     </div>
     <p class="body-3 text-gray-900 mt-4 text-start">
@@ -28,7 +32,12 @@ type Props = {
   title?: string;
 };
 
+type Emits = {
+  (e: 'delete'): void;
+};
+
 const props = defineProps<Props>();
+const emits = defineEmits<Emits>();
 
 const formattedPrice = computed(() =>
   props.price ? convertToPersianDigit(props.price) : ''

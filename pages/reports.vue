@@ -12,7 +12,7 @@
         </li>
       </ul>
       <FixedBottom has-bottom-sheet>
-        <Button block>
+        <Button block @click="open = true">
           ثبت گزارش
           <template #icon>
             <AddIcon white />
@@ -21,8 +21,15 @@
       </FixedBottom>
     </main>
     <BottomNavigation />
+    <BottomSheet :open="open" @close="open = false">
+      <EditReport @close="open = false" />
+    </BottomSheet>
   </div>
 </template>
+
+<script setup lang="ts">
+const open = ref(false);
+</script>
 
 <style scoped>
 .page {

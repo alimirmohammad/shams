@@ -30,7 +30,7 @@
         </li>
       </ul>
       <FixedBottom>
-        <Button block>
+        <Button block @click="open = true">
           افزودن فیش
           <template #icon>
             <AddIcon white />
@@ -38,6 +38,9 @@
         </Button>
       </FixedBottom>
     </main>
+    <BottomSheet :open="open" @close="open = false">
+      <EditBill @close="open = false" />
+    </BottomSheet>
   </div>
 </template>
 
@@ -49,6 +52,7 @@ const tabs = [
   { label: 'سهام', to: '/share' },
   { label: 'وام', to: '/debt' },
 ];
+const open = ref(false);
 </script>
 
 <style scoped>

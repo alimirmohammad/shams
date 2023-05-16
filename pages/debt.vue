@@ -26,11 +26,12 @@
             :price="2_000_000"
             date="۱۴۰۱/۵/۱"
             description="توضیحات مربوط به فیش واریزی"
+            @delete="modal = 'delete-bill'"
           />
         </li>
       </ul>
       <FixedBottom>
-        <Button block>
+        <Button block @click="modal = 'edit-bill'">
           افزودن فیش
           <template #icon>
             <AddIcon white />
@@ -38,18 +39,25 @@
         </Button>
       </FixedBottom>
     </main>
+    <BottomSheet :open="modal === 'edit-bill'" @close="modal = 'none'">
+      <EditBill @close="modal = 'none'" />
+    </BottomSheet>
+    <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
+      <DeleteBill @close="modal = 'none'" />
+    </BottomSheet>
   </div>
 </template>
 
 <script setup lang="ts">
 const name = ref('آرش کوشش');
 const numOfSharesPersian = computed(() => convertToPersianDigit(5));
-const total = computed(() => convertToPersianDigit(24_000_000));
 const title = computed(() => `${name.value} (${numOfSharesPersian.value})`);
 const tabs = [
   { label: 'سهام', to: '/share' },
   { label: 'وام', to: '/debt' },
 ];
+type Modal = 'edit-bill' | 'delete-bill' | 'none';
+const modal = ref<Modal>('none');
 </script>
 
 <style scoped>
