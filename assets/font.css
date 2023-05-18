@@ -11,3 +11,19 @@
   font-weight: 500;
   src: local('IRANSansX'), url(./fonts/IRANSansXMedium.woff) format('woff');
 }
+
+@font-face {
+  font-family: iransansxfanum;
+  font-style: normal;
+  font-weight: 400;
+  src: local('IRANSansXFaNum'),
+    url(./fonts/IRANSansXRegularFaNum.woff) format('woff');
+}
+
+@font-face {
+  font-family: iransansxfanum;
+  font-style: normal;
+  font-weight: 500;
+  src: local('IRANSansXFaNum'),
+    url(./fonts/IRANSansXMediumFaNum.woff) format('woff');
+}

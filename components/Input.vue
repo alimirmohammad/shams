@@ -3,19 +3,24 @@
     <label :for="id" class="label">
       <span class="label-text label-3 text-gray-500">{{ label }}</span>
     </label>
-    <textarea
-      v-if="multiline"
+    <component
+      :is="multiline ? 'textarea' : 'input'"
       :id="id"
       v-bind="$attrs"
-      class="textarea textarea-bordered textarea-primary textarea-lg w-full"
-      :class="inputClass"
-    />
-    <input
-      v-else
-      :id="id"
-      v-bind="$attrs"
-      class="input input-bordered input-primary w-full"
-      :class="inputClass"
+      :value="formatter(value)"
+      v-on="validationListeners"
+      class="w-full"
+      :class="[
+        inputClass,
+        {
+          'textarea textarea-bordered textarea-lg': multiline,
+          'input input-bordered': !multiline,
+          'textarea-primary': multiline && !errorMessage,
+          'input-primary': !multiline && !errorMessage,
+          'textarea-error': multiline && errorMessage,
+          'input-error': !multiline && errorMessage,
+        },
+      ]"
     />
     <div v-if="$slots.startAdornment" class="absolute top-[50px] right-3">
       <slot name="startAdornment" />
@@ -23,8 +28,11 @@
     <div v-if="$slots.endAdornment" class="absolute top-[50px] left-3">
       <slot name="endAdornment" />
     </div>
-    <div v-if="$slots.helperText" class="mt-2">
-      <slot name="helperText" />
+    <div v-if="errorMessage || $slots.helperText" class="mt-2">
+      <span v-if="errorMessage" class="block body-3 text-red-500 text-start">
+        {{ errorMessage }}
+      </span>
+      <slot v-else name="helperText" />
     </div>
   </div>
 </template>
@@ -33,20 +41,68 @@
 type Props = {
   id: string;
   label: string;
-  modelValue: string;
+  initialValue?: string;
   error?: boolean;
   errorText?: string;
   inputClass?: string;
   containerClass?: string;
   multiline?: boolean;
+  formatter?: (value: string) => string;
+  transformer?: (e: Event) => string;
 };
 
 type Emits = {
   (e: 'update:modelValue', value: string): void;
 };
 
-defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  initialValue: '',
+  formatter: (value: string) => value,
+  transformer: (e: Event) => (e.target as HTMLInputElement).value,
+});
 defineEmits<Emits>();
+
+const { value, errorMessage, handleChange } = useField(props.id, undefined, {
+  initialValue: props.initialValue,
+  validateOnValueUpdate: false,
+});
+
+const validationListeners = computed(() => {
+  // If the field is valid or have not been validated yet
+  // lazy
+  if (!errorMessage.value) {
+    return {
+      blur: (e: Event) => {
+        const value = props.transformer(e);
+        handleChange(value);
+      },
+      change: (e: Event) => {
+        const value = props.transformer(e);
+        handleChange(value);
+      },
+      // disable `shouldValidate` to avoid validating on input
+      input: (e: Event) => {
+        const value = props.transformer(e);
+        handleChange(value, false);
+      },
+    };
+  }
+  // Aggressive
+  return {
+    blur: (e: Event) => {
+      const value = props.transformer(e);
+      handleChange(value);
+    },
+    change: (e: Event) => {
+      const value = props.transformer(e);
+      handleChange(value);
+    },
+    input: (e: Event) => {
+      const value = props.transformer(e);
+      handleChange(value);
+    }, // only switched this
+  };
+});
 </script>
 
 <script lang="ts">

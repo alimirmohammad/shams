@@ -10,6 +10,9 @@
   }
 }
 
+.font-fa {
+  font-family: 'IRANSansXFaNum', system-ui, sans-serif;
+}
 .headline-1 {
   @apply text-[22px] font-medium;
   line-height: 33px;
