@@ -1,11 +1,11 @@
 <template>
-  <Form @submit="onSubmit" :validation-schema="editBillSchema">
+  <Form @submit="onSubmit" :validation-schema="editBillSchema" class="font-fa">
     <Input
       id="price"
       inputmode="numeric"
       label="مبلغ"
       dir="ltr"
-      inputClass="pr-14 font-fa"
+      inputClass="pr-14"
       containerClass="mb-10"
       :formatter="commafy"
       :transformer="transformPrice"
@@ -15,6 +15,7 @@
       </template>
     </Input>
     <Input id="date" label="تاریخ" type="date" containerClass="mb-10" />
+    <DatePicker v-model="date" />
     <Input
       id="description"
       label="توضیحات"
@@ -34,7 +35,7 @@ type Emits = {
 };
 
 defineEmits<Emits>();
-
+const date = ref();
 const schema = z.object({
   price: z
     .string()

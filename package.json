@@ -14,6 +14,7 @@
     "tailwindcss-flip": "^1.0.0"
   },
   "dependencies": {
+    "@alireza-ab/vue3-persian-datepicker": "^1.0.2",
     "@vee-validate/nuxt": "^4.9.3",
     "@vee-validate/zod": "^4.9.3",
     "zod": "^3.21.4"

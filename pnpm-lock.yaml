@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@alireza-ab/vue3-persian-datepicker':
+    specifier: ^1.0.2
+    version: 1.0.2
   '@vee-validate/nuxt':
     specifier: ^4.9.3
     version: 4.9.3(typescript@5.0.4)(vue@3.2.47)
@@ -26,6 +29,20 @@ devDependencies:
     version: 1.0.0
 
 packages:
+
+  /@alireza-ab/persian-date@2.6.2:
+    resolution: {integrity: sha512-Xv7gi9z4a9Y+2C7iklVaOOAuWWPFUxJbvoDgOJFATNirTFvzWtiKWAwXY/rYfil4Z8TrPD2RSpvBQZ4PoemGrw==}
+    dev: false
+
+  /@alireza-ab/vue3-persian-datepicker@1.0.2:
+    resolution: {integrity: sha512-aDQU/8lRfIZmHHLjknHaREt05Pe7SsZUt7Sdyu6kWOTcIBZsXrYu2EHKjJee54BvVT3VzVuvxxQU5/bQTqUYEA==}
+    dependencies:
+      '@alireza-ab/persian-date': 2.6.2
+      '@nuxt/kit': 3.5.0
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: false
 
   /@ampproject/remapping@2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
