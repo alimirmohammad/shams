@@ -1,7 +1,12 @@
 <template>
   <div class="form-control w-full relative" :class="containerClass">
     <label :for="id" class="label">
-      <span class="label-text label-3 text-gray-500">{{ label }}</span>
+      <span
+        class="label-text label-3 text-gray-500"
+        :class="{ 'text-red-500': errorMessage }"
+      >
+        {{ label }}
+      </span>
     </label>
     <component
       :is="multiline ? 'textarea' : 'input'"
@@ -58,51 +63,15 @@ type Emits = {
 const props = withDefaults(defineProps<Props>(), {
   initialValue: '',
   formatter: (value: string) => value,
-  transformer: (e: Event) => (e.target as HTMLInputElement).value,
 });
+
 defineEmits<Emits>();
 
-const { value, errorMessage, handleChange } = useField(props.id, undefined, {
-  initialValue: props.initialValue,
-  validateOnValueUpdate: false,
-});
-
-const validationListeners = computed(() => {
-  // If the field is valid or have not been validated yet
-  // lazy
-  if (!errorMessage.value) {
-    return {
-      blur: (e: Event) => {
-        const value = props.transformer(e);
-        handleChange(value);
-      },
-      change: (e: Event) => {
-        const value = props.transformer(e);
-        handleChange(value);
-      },
-      // disable `shouldValidate` to avoid validating on input
-      input: (e: Event) => {
-        const value = props.transformer(e);
-        handleChange(value, false);
-      },
-    };
-  }
-  // Aggressive
-  return {
-    blur: (e: Event) => {
-      const value = props.transformer(e);
-      handleChange(value);
-    },
-    change: (e: Event) => {
-      const value = props.transformer(e);
-      handleChange(value);
-    },
-    input: (e: Event) => {
-      const value = props.transformer(e);
-      handleChange(value);
-    }, // only switched this
-  };
-});
+const { value, errorMessage, validationListeners } = useValidation(
+  props.id,
+  props.initialValue,
+  props.transformer
+);
 </script>
 
 <script lang="ts">

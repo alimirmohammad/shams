@@ -1,12 +1,13 @@
 <template>
   <Form @submit="onSubmit" :validation-schema="editBillSchema" class="font-fa">
+    <DatePicker id="date" label="تاریخ" class="mb-6" />
     <Input
       id="price"
       inputmode="numeric"
       label="مبلغ"
       dir="ltr"
       inputClass="pr-14"
-      containerClass="mb-10"
+      containerClass="mb-6"
       :formatter="commafy"
       :transformer="transformPrice"
     >
@@ -14,8 +15,6 @@
         <span class="text-gray-500"> ریال </span>
       </template>
     </Input>
-    <Input id="date" label="تاریخ" type="date" containerClass="mb-10" />
-    <DatePicker v-model="date" />
     <Input
       id="description"
       label="توضیحات"
@@ -49,7 +48,14 @@ const schema = z.object({
   date: z
     .string()
     .nonempty('وارد کردن تاریخ الزامی است')
-    .pipe(z.coerce.date().max(new Date(), 'تاریخ نمی‌تواند در آینده باشد')),
+    .pipe(
+      z.coerce
+        .date({
+          required_error: 'وارد کردن تاریخ الزامی است',
+          invalid_type_error: 'وارد کردن تاریخ الزامی است',
+        })
+        .max(new Date(), 'تاریخ نمی‌تواند در آینده باشد')
+    ),
   description: z.string(),
 });
 
