@@ -1,6 +1,6 @@
 <template>
   <Form @submit="onSubmit" :validation-schema="editBillSchema" class="font-fa">
-    <DatePicker id="date" label="تاریخ" class="mb-6" />
+    <PersianDatePicker id="date" label="تاریخ" class="mb-6" />
     <Input
       id="price"
       inputmode="numeric"
@@ -34,7 +34,6 @@ type Emits = {
 };
 
 defineEmits<Emits>();
-const date = ref();
 const schema = z.object({
   price: z
     .string()

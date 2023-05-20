@@ -8,7 +8,7 @@
         {{ label }}
       </span>
     </label>
-    <PersianDatePicker
+    <DatePicker
       :id="id"
       mode="single"
       :column="1"
@@ -27,8 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import PersianDatePicker from '@alireza-ab/vue3-persian-datepicker';
-
 type Props = {
   id: string;
   label: string;
