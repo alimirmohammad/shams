@@ -9,7 +9,7 @@
     <h4 class="mb-3 text-primary-500 headline-3">صندوق قرض الحسنه</h4>
     <h4 class="mb-12 text-primary-500 label-3">تأسیس ۱۳۸۲</h4>
     <Input
-      id="mobile"
+      id="phoneNumber"
       label="شماره موبایل"
       placeholder="9121234567"
       dir="ltr"
@@ -38,14 +38,18 @@
       </template>
     </Input>
     <Button type="submit" block> ورود </Button>
+    <Toast v-if="isToastVisible" toast-class="alert-error"> {{ err }} </Toast>
   </Form>
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client';
+import { NuxtError } from 'nuxt/app';
 import { z } from 'zod';
+import useToast from '~/composables/useToast';
 
 const schema = z.object({
-  mobile: z
+  phoneNumber: z
     .string()
     .nonempty('پر کردن این فیلد الزامی است')
     .regex(/^9\d{9}$/, 'فرمت وارد شده برای موبایل صحیح نیست'),
@@ -57,8 +61,24 @@ const schema = z.object({
 
 const loginSchema = toTypedSchema(schema);
 
-function onSubmit(values: unknown): void {
-  console.log((values as z.infer<typeof schema>).mobile);
-  alert(JSON.stringify(values, null, 2));
+const { showToast, isToastVisible } = useToast();
+const err = ref('');
+
+async function onSubmit(values: unknown) {
+  const { phoneNumber, password } = values as z.infer<typeof schema>;
+  try {
+    const { role } = await $fetch('/api/auth/signin', {
+      method: 'POST',
+      body: { phoneNumber, password },
+    });
+    if (role === Role.ADMIN) {
+      navigateTo('/people');
+    } else {
+      navigateTo('/share');
+    }
+  } catch (e) {
+    err.value = (e as NuxtError).data.message;
+    showToast();
+  }
 }
 </script>
