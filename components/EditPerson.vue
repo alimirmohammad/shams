@@ -4,30 +4,32 @@
     :validation-schema="editPersonSchema"
     class="font-fa"
   >
+    <Input id="firstName" label="نام" type="text" containerClass="mb-10" />
     <Input
-      v-model="firstName"
-      id="firstName"
-      label="نام"
-      type="text"
-      containerClass="mb-10"
-    />
-    <Input
-      v-model="lastName"
       id="lastName"
       label="نام خانوادگی"
       type="text"
       containerClass="mb-10"
     />
     <Input
-      v-model="phoneNumber"
       id="phoneNumber"
       label="شماره موبایل"
+      placeholder="9121234567"
       dir="ltr"
       type="tel"
-      containerClass="mb-10"
-    />
+      inputClass="pr-14 font-fa"
+      containerClass="mb-8"
+    >
+      <template #endAdornment>
+        <span dir="ltr" class="text-gray-500"> +۹۸ | </span>
+      </template>
+      <template #helperText>
+        <p class="body-3 text-gray-500 text-start">
+          لطفا شماره همراه را بدون صفر اول وارد کنید
+        </p>
+      </template>
+    </Input>
     <Input
-      v-model="numOfShares"
       id="numOfShares"
       label="تعداد سهام"
       dir="ltr"
@@ -47,6 +49,7 @@ type Emits = {
 };
 
 const emit = defineEmits<Emits>();
+
 const schema = z.object({
   firstName: z.string().nonempty('وارد کردن نام الزامی است'),
   lastName: z.string().nonempty('وارد کردن نام خانوادگی الزامی است'),
@@ -66,6 +69,7 @@ const schema = z.object({
 });
 
 const editPersonSchema = toTypedSchema(schema);
+
 const queryClient = useQueryClient();
 
 const { mutate } = useMutation({

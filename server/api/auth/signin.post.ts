@@ -33,5 +33,5 @@ export default defineEventHandler(async event => {
 
   setCookie(event, 'token', token, { maxAge: 60 * 60 });
 
-  return { role: user.role };
+  return { role: user.role, id: user.id };
 });

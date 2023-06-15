@@ -30,7 +30,7 @@ watchEffect(async () => {
   if (!isSuccess.value) return;
   if (!data.value) return navigateTo('/signin');
   if (data.value.role === Role.ADMIN) return navigateTo('/people');
-  navigateTo('/share');
+  navigateTo(`/${data.value.id}/share`);
 });
 </script>
 

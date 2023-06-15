@@ -67,14 +67,14 @@ const err = ref('');
 async function onSubmit(values: unknown) {
   const { phoneNumber, password } = values as z.infer<typeof schema>;
   try {
-    const { role } = await $fetch('/api/auth/signin', {
+    const { role, id } = await $fetch('/api/auth/signin', {
       method: 'POST',
       body: { phoneNumber, password },
     });
     if (role === Role.ADMIN) {
       navigateTo('/people');
     } else {
-      navigateTo('/share');
+      navigateTo(`/${id}/share`);
     }
   } catch (e) {
     err.value = (e as NuxtError).data.message;

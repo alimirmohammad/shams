@@ -27,7 +27,7 @@
         />
         <ul class="flex flex-col gap-4">
           <li v-for="person in people">
-            <NuxtLink to="/login">
+            <NuxtLink :to="`/${person.id}/share`">
               <PersonCard
                 :name="`${person.firstName} ${person.lastName}`"
                 :numOfShares="person.numOfShares"

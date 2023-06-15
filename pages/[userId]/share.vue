@@ -1,8 +1,8 @@
 <template>
   <div class="page">
-    <Header :title="title">
+    <Header class="font-fa" :title="title">
       <template #startAction>
-        <IconButton>
+        <IconButton @click="$router.back">
           <ArrowRightIcon />
         </IconButton>
       </template>
@@ -18,14 +18,14 @@
         <IconText title="فیلتر">
           <FilterIcon />
         </IconText>
-        <PriceSummary title="ارزش سهام" :price="24_000_000" />
+        <PriceSummary title="ارزش سهام" :price="balance" />
       </div>
       <ul class="flex flex-col gap-4">
-        <li v-for="(item, index) in Array(15).fill('*')">
+        <li v-for="bill in bills" :key="bill.id">
           <ItemCard
-            :price="2_000_000"
-            date="۱۴۰۱/۵/۱"
-            description="توضیحات مربوط به فیش واریزی"
+            :price="bill.amount"
+            :date="bill.date"
+            :description="bill.description"
           />
         </li>
       </ul>
@@ -45,14 +45,28 @@
 </template>
 
 <script setup lang="ts">
-const name = ref('آرش کوشش');
-const numOfSharesPersian = computed(() => convertToPersianDigit(5));
-const title = computed(() => `${name.value} (${numOfSharesPersian.value})`);
-const tabs = [
-  { label: 'سهام', to: '/share' },
-  { label: 'وام', to: '/debt' },
-];
+import { useQuery } from '@tanstack/vue-query';
+
 const open = ref(false);
+const route = useRoute();
+const userId = computed(() => route.params.userId);
+const tabs = computed(() => [
+  { label: 'سهام', to: `/${userId.value}/share` },
+  { label: 'وام', to: `/${userId.value}/loan` },
+]);
+
+const { data } = useQuery({
+  queryKey: ['share', userId],
+  queryFn: () => $fetch(`/api/people/${userId.value}/share`),
+});
+
+const name = computed(() => `${data.value?.firstName} ${data.value?.lastName}`);
+const numOfSharesPersian = computed(() => data.value?.numOfShares);
+const title = computed(() =>
+  data.value ? `${name.value} (${numOfSharesPersian.value})` : ''
+);
+const bills = computed(() => data.value?.bills ?? []);
+const balance = computed(() => data.value?.balance ?? 0);
 </script>
 
 <style scoped>
