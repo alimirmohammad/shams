@@ -16,7 +16,23 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Role } from '@prisma/client';
+import { useQuery } from '@tanstack/vue-query';
+
+const { data, isSuccess } = useQuery({
+  queryKey: ['me'],
+  queryFn: () => $fetch('/api/auth/me'),
+});
+
+watchEffect(async () => {
+  await delay(2);
+  if (!isSuccess.value) return;
+  if (!data.value) return navigateTo('/signin');
+  if (data.value.role === Role.ADMIN) return navigateTo('/people');
+  navigateTo('/share');
+});
+</script>
 
 <style scoped>
 .top-sheet {

@@ -20,6 +20,7 @@
   "dependencies": {
     "@alireza-ab/vue3-persian-datepicker": "^1.0.2",
     "@prisma/client": "4.14.1",
+    "@tanstack/vue-query": "^4.29.13",
     "@vee-validate/nuxt": "^4.9.3",
     "@vee-validate/zod": "^4.9.3",
     "bcrypt": "^5.1.0",

@@ -13,7 +13,7 @@
         <button @click="$emit('delete')">
           <DeleteIcon />
         </button>
-        <button>
+        <button @click="$emit('edit')">
           <EditIcon />
         </button>
       </div>
@@ -34,10 +34,11 @@ type Props = {
 
 type Emits = {
   (e: 'delete'): void;
+  (e: 'edit'): void;
 };
 
 const props = defineProps<Props>();
-const emits = defineEmits<Emits>();
+defineEmits<Emits>();
 
 const formattedPrice = computed(() =>
   props.price ? convertToPersianDigit(props.price) : ''

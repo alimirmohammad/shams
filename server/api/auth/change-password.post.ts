@@ -1,5 +1,5 @@
 import { hash } from 'bcrypt';
-import { UserBaseData } from '~~/server/middleware/auth';
+import { UserBaseData } from '~/server/middleware/auth';
 
 export default defineEventHandler(async event => {
   protectRoute(event);

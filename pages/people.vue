@@ -8,41 +8,79 @@
       </template>
     </Header>
     <main class="bg-white text-center overflow-auto p-4">
-      <PriceSummary
-        title="ارزش کل صندق"
-        :price="2_500_000_000"
-        lg
-        class="mb-10"
-      />
-      <Input
-        v-model="query"
-        id="query"
-        label="جستجو"
-        type="text"
-        containerClass="mb-6"
-      />
-      <ul class="flex flex-col gap-4">
-        <li v-for="(item, index) in Array(15).fill('*')">
-          <NuxtLink to="/login">
-            <PersonCard
-              name="علی میرمحمد"
-              :numOfShares="5"
-              :debt="index % 5 === 0 ? 12_000_000 : undefined"
-            />
-          </NuxtLink>
-        </li>
-      </ul>
+      <div v-if="isLoading" class="h-full flex items-center justify-center">
+        <Spinner />
+      </div>
+      <template v-if="isSuccess">
+        <PriceSummary
+          title="ارزش کل صندق"
+          :price="totalBalance"
+          lg
+          class="mb-10"
+        />
+        <Input
+          v-model="query"
+          id="query"
+          label="جستجو"
+          type="text"
+          containerClass="mb-6"
+        />
+        <ul class="flex flex-col gap-4">
+          <li v-for="person in people">
+            <NuxtLink to="/login">
+              <PersonCard
+                :name="`${person.firstName} ${person.lastName}`"
+                :numOfShares="person.numOfShares"
+                :debt="person.loans[0]?.debt"
+              />
+            </NuxtLink>
+          </li>
+        </ul>
+      </template>
     </main>
     <BottomNavigation />
     <BottomSheet :open="open" @close="open = false">
       <EditPerson @close="open = false" />
     </BottomSheet>
+    <Toast v-if="isToastVisible" toast-class="alert-error">
+      {{ errorText }}
+    </Toast>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useQuery } from '@tanstack/vue-query';
+import { NuxtError } from 'nuxt/app';
+
 const query = ref('');
 const open = ref(false);
+
+const {
+  data: people,
+  error,
+  isError,
+  isSuccess,
+  isLoading,
+} = useQuery({
+  queryKey: ['people'],
+  queryFn: () => $fetch('/api/people/list'),
+});
+
+const { showToast, isToastVisible } = useToast();
+
+const totalBalance = computed(
+  () => people.value?.reduce((acc, cur) => acc + cur.balance, 0) ?? 0
+);
+
+const errorText = computed<string>(
+  () => (error.value as NuxtError)?.data.message ?? ''
+);
+
+watchEffect(() => {
+  if (isError.value) {
+    showToast();
+  }
+});
 </script>
 
 <style scoped>
