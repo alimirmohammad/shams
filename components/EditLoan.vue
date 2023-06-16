@@ -1,17 +1,14 @@
 <template>
   <Form @submit="onSubmit" :validation-schema="editLoanSchema" class="font-fa">
     <Select
-      id="name"
+      id="userId"
       label="وام گیرنده"
-      :items="[
-        { text: 'ss', value: 's' },
-        { text: 'bb', value: 'b' },
-      ]"
+      :items="users"
       containerClass="mb-4"
     />
     <PersianDatePicker id="date" label="تاریخ" class="mb-4" />
     <Input
-      id="price"
+      id="amount"
       inputmode="numeric"
       label="مبلغ"
       dir="ltr"
@@ -36,16 +33,25 @@
 </template>
 
 <script setup lang="ts">
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
 
 type Emits = {
   (e: 'close'): void;
 };
 
-defineEmits<Emits>();
+const emit = defineEmits<Emits>();
 const schema = z.object({
-  name: z.string().nonempty('انتخاب وام گیرنده الزامی است'),
-  price: z
+  userId: z
+    .string()
+    .nonempty('انتخاب وام گیرنده الزامی است')
+    .pipe(
+      z.coerce
+        .number()
+        .int('شناسه کاربر باید عدد صحیح باشد')
+        .positive('شناسه کاربر باید عدد مثبت باشد')
+    ),
+  amount: z
     .string()
     .nonempty('وارد کردن مبلغ الزامی است')
     .pipe(
@@ -71,7 +77,35 @@ const schema = z.object({
 const editLoanSchema = toTypedSchema(schema);
 
 function onSubmit(values: unknown): void {
-  console.log((values as z.infer<typeof schema>).price);
-  alert(JSON.stringify(values, null, 2));
+  mutate(values as z.infer<typeof schema>, {
+    onSuccess: () => emit('close'),
+  });
 }
+
+const queryClient = useQueryClient();
+
+const { data: eligibleList } = useQuery({
+  queryKey: ['eligible'],
+  queryFn: () => $fetch('/api/people/eligible'),
+});
+
+const { mutate } = useMutation({
+  mutationFn: (body: z.infer<typeof schema>) =>
+    $fetch('/api/loans/add-loan', {
+      method: 'POST',
+      body,
+    }),
+  onSuccess: () => {
+    queryClient.invalidateQueries(['eligible']);
+    queryClient.invalidateQueries(['loans']);
+  },
+});
+
+const users = computed(
+  () =>
+    eligibleList.value?.map(user => ({
+      text: `${user.firstName} ${user.lastName}`,
+      value: user.id,
+    })) ?? []
+);
 </script>

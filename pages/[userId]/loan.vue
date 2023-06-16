@@ -59,7 +59,7 @@ const tabs = computed(() => [
 ]);
 
 const { data } = useQuery({
-  queryKey: ['share', userId],
+  queryKey: ['loan', userId],
   queryFn: () => $fetch(`/api/people/${userId.value}/loan-bills`),
 });
 
@@ -69,7 +69,7 @@ const title = computed(() =>
   data.value ? `${name.value} (${numOfSharesPersian.value})` : ''
 );
 
-const lastLoan = computed(() => data.value?.loans[0]);
+const lastLoan = computed(() => data.value?.loans.at(0));
 const bills = computed(() => lastLoan.value?.bills ?? []);
 const debt = computed(() => lastLoan.value?.debt ?? 0);
 type Modal = 'edit-bill' | 'delete-bill' | 'none';

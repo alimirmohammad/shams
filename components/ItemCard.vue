@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-    <span v-if="username" class="block body-2 text-gray-900 mt-2">
+    <span v-if="username" class="block body-2 text-gray-900 mt-2 text-start">
       {{ username }}
     </span>
     <p class="body-3 text-gray-900 mt-4 text-start">
