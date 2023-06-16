@@ -39,13 +39,14 @@
       </FixedBottom>
     </main>
     <BottomSheet :open="open" @close="open = false">
-      <EditBill :user-id="userId" @close="open = false" />
+      <EditBill @submit="editBill" @close="open = false" />
     </BottomSheet>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { Bill } from '~/components/EditBill.vue';
 
 const open = ref(false);
 const route = useRoute();
@@ -67,6 +68,23 @@ const title = computed(() =>
 );
 const bills = computed(() => data.value?.bills ?? []);
 const balance = computed(() => data.value?.balance ?? 0);
+
+const queryClient = useQueryClient();
+
+const { mutate } = useMutation({
+  mutationFn: (bill: Bill) =>
+    $fetch(`/api/people/${userId.value}/share`, {
+      method: 'POST',
+      body: bill,
+    }),
+  onSuccess: () => queryClient.invalidateQueries(['share', userId]),
+});
+
+function editBill(values: Bill) {
+  mutate(values, {
+    onSuccess: () => (open.value = false),
+  });
+}
 </script>
 
 <style scoped>

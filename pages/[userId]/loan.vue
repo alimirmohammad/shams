@@ -40,7 +40,7 @@
       </FixedBottom>
     </main>
     <BottomSheet :open="modal === 'edit-bill'" @close="modal = 'none'">
-      <EditBill @close="modal = 'none'" />
+      <EditBill @submit="editBill" @close="modal = 'none'" />
     </BottomSheet>
     <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
       <DeleteBill @close="modal = 'none'" />
@@ -49,7 +49,8 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { Bill } from '~~/components/EditBill.vue';
 
 const route = useRoute();
 const userId = computed(() => route.params.userId);
@@ -74,6 +75,23 @@ const bills = computed(() => lastLoan.value?.bills ?? []);
 const debt = computed(() => lastLoan.value?.debt ?? 0);
 type Modal = 'edit-bill' | 'delete-bill' | 'none';
 const modal = ref<Modal>('none');
+
+const queryClient = useQueryClient();
+
+const { mutate } = useMutation({
+  mutationFn: (bill: Bill) =>
+    $fetch(`/api/people/${userId.value}/loan-bills`, {
+      method: 'POST',
+      body: bill,
+    }),
+  onSuccess: () => queryClient.invalidateQueries(['loan', userId]),
+});
+
+function editBill(values: Bill) {
+  mutate(values, {
+    onSuccess: () => (modal.value = 'none'),
+  });
+}
 </script>
 
 <style scoped>

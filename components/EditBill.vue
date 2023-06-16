@@ -27,19 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
 
-type Props = {
-  userId: string;
-};
-
-type Emits = {
-  (e: 'close'): void;
-};
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
 const schema = z.object({
   amount: z
     .string()
@@ -65,21 +54,16 @@ const schema = z.object({
 });
 
 const editBillSchema = toTypedSchema(schema);
+export type Bill = z.infer<typeof schema>;
 
-const queryClient = useQueryClient();
+type Emits = {
+  (e: 'close'): void;
+  (e: 'submit', bill: Bill): void;
+};
+
+const emit = defineEmits<Emits>();
 
 function onSubmit(values: unknown): void {
-  mutate(values as z.infer<typeof schema>, {
-    onSuccess: () => emit('close'),
-  });
+  emit('submit', values as Bill);
 }
-
-const { mutate } = useMutation({
-  mutationFn: (bill: z.infer<typeof schema>) =>
-    $fetch(`/api/people/${props.userId}/share`, {
-      method: 'POST',
-      body: bill,
-    }),
-  onSuccess: () => queryClient.invalidateQueries(['share', props.userId]),
-});
 </script>
