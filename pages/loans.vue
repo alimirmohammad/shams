@@ -9,11 +9,12 @@
     </Header>
     <main class="bg-white text-center overflow-auto p-4">
       <ul class="flex flex-col gap-4">
-        <li v-for="(item, index) in Array(15).fill('*')">
+        <li v-for="loan in loans" :key="loan.id">
           <ItemCard
-            :price="2_000_000"
-            date="۱۴۰۱/۵/۱"
-            description="توضیحات مربوط به فیش واریزی"
+            :price="loan.amount"
+            :date="loan.date"
+            :description="loan.description"
+            :username="`${loan.user.firstName} ${loan.user.lastName}`"
             @delete="modal = 'delete-bill'"
             @edit="modal = 'edit-bill'"
           />
@@ -40,12 +41,12 @@ const query = ref('');
 const open = ref(false);
 
 const {
-  data: people,
+  data: loans,
   error,
   isSuccess,
 } = useQuery({
-  queryKey: ['people'],
-  queryFn: () => $fetch('/api/people/list'),
+  queryKey: ['loans'],
+  queryFn: () => $fetch('/api/loans/list'),
 });
 
 type Modal = 'edit-bill' | 'delete-bill' | 'none';

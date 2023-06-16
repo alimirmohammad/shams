@@ -10,10 +10,11 @@ export default defineEventHandler(async event => {
       status: Status.ONGOING,
     },
     select: {
+      id: true,
       amount: true,
       date: true,
       debt: true,
-      id: true,
+      description: true,
       user: {
         select: {
           id: true,
