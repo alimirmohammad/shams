@@ -2,7 +2,7 @@
   <Form @submit="onSubmit" :validation-schema="editBillSchema" class="font-fa">
     <PersianDatePicker id="date" label="تاریخ" class="mb-6" />
     <Input
-      id="price"
+      id="amount"
       inputmode="numeric"
       label="مبلغ"
       dir="ltr"
@@ -27,15 +27,21 @@
 </template>
 
 <script setup lang="ts">
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
+
+type Props = {
+  userId: string;
+};
 
 type Emits = {
   (e: 'close'): void;
 };
 
-defineEmits<Emits>();
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 const schema = z.object({
-  price: z
+  amount: z
     .string()
     .nonempty('وارد کردن مبلغ الزامی است')
     .pipe(
@@ -60,8 +66,20 @@ const schema = z.object({
 
 const editBillSchema = toTypedSchema(schema);
 
+const queryClient = useQueryClient();
+
 function onSubmit(values: unknown): void {
-  console.log((values as z.infer<typeof schema>).price);
-  alert(JSON.stringify(values, null, 2));
+  mutate(values as z.infer<typeof schema>, {
+    onSuccess: () => emit('close'),
+  });
 }
+
+const { mutate } = useMutation({
+  mutationFn: (bill: z.infer<typeof schema>) =>
+    $fetch(`/api/people/${props.userId}/share`, {
+      method: 'POST',
+      body: bill,
+    }),
+  onSuccess: () => queryClient.invalidateQueries(['share', props.userId]),
+});
 </script>

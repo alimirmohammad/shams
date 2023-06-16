@@ -39,7 +39,7 @@
       </FixedBottom>
     </main>
     <BottomSheet :open="open" @close="open = false">
-      <EditBill @close="open = false" />
+      <EditBill :user-id="userId" @close="open = false" />
     </BottomSheet>
   </div>
 </template>

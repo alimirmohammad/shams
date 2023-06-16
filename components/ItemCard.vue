@@ -9,7 +9,7 @@
         {{ title }}
       </span>
       <div class="flex flex-row items-center gap-5">
-        <span class="body-2 text-gray-900">{{ date }}</span>
+        <span class="body-2 text-gray-900">{{ jalali }}</span>
         <button @click="$emit('delete')">
           <DeleteIcon />
         </button>
@@ -47,4 +47,5 @@ defineEmits<Emits>();
 const formattedPrice = computed(() =>
   props.price ? convertToPersianDigit(props.price) : ''
 );
+const jalali = computed(() => convertToJalaliString(props.date));
 </script>
