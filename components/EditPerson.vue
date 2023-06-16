@@ -4,12 +4,19 @@
     :validation-schema="editPersonSchema"
     class="font-fa"
   >
-    <Input id="firstName" label="نام" type="text" containerClass="mb-10" />
+    <Input
+      id="firstName"
+      label="نام"
+      type="text"
+      containerClass="mb-10"
+      :initial-value="person?.firstName"
+    />
     <Input
       id="lastName"
       label="نام خانوادگی"
       type="text"
       containerClass="mb-10"
+      :initial-value="person?.lastName"
     />
     <Input
       id="phoneNumber"
@@ -19,6 +26,7 @@
       type="tel"
       inputClass="pr-14 font-fa"
       containerClass="mb-8"
+      :initial-value="person?.phoneNumber"
     >
       <template #endAdornment>
         <span dir="ltr" class="text-gray-500"> +۹۸ | </span>
@@ -35,20 +43,14 @@
       dir="ltr"
       type="number"
       containerClass="mb-14"
+      :initial-value="person?.numOfShares.toString()"
     />
     <Button block type="submit">ثبت سهام دار</Button>
   </Form>
 </template>
 
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
-
-type Emits = {
-  (e: 'close'): void;
-};
-
-const emit = defineEmits<Emits>();
 
 const schema = z.object({
   firstName: z.string().nonempty('وارد کردن نام الزامی است'),
@@ -70,21 +72,22 @@ const schema = z.object({
 
 const editPersonSchema = toTypedSchema(schema);
 
-const queryClient = useQueryClient();
+export type Person = z.infer<typeof schema>;
 
-const { mutate } = useMutation({
-  mutationFn: (values: z.infer<typeof schema>) =>
-    $fetch('/api/auth/signup', {
-      method: 'POST',
-      body: values,
-    }),
-  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['people'] }),
-});
+type Props = {
+  person?: Person;
+};
+
+type Emits = {
+  (e: 'close'): void;
+  (e: 'submit', person: Person): void;
+};
+
+defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 function onSubmit(values: unknown): void {
-  mutate(values as z.infer<typeof schema>, {
-    onSuccess: () => emit('close'),
-  });
+  emit('submit', values as Person);
 }
 </script>
 

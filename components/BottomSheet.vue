@@ -6,7 +6,7 @@
       @click.self="$emit('close')"
     >
       <div class="modal-box shadow py-10 px-4 rounded-t-3xl">
-        <slot />
+        <slot :key="open" />
       </div>
     </div>
   </Teleport>
@@ -24,5 +24,3 @@ type Emits = {
 defineProps<Props>();
 defineEmits<Emits>();
 </script>
-
-<style scoped></style>

@@ -22,6 +22,7 @@ export default defineEventHandler(async event => {
       lastName: true,
       numOfShares: true,
       balance: true,
+      phoneNumber: true,
       loans: {
         take: 1,
         orderBy: {

@@ -7,7 +7,7 @@
         </IconButton>
       </template>
       <template #endAction>
-        <IconText title="ویرایش">
+        <IconText title="ویرایش" @click="modal = 'edit-person'">
           <EditIcon />
         </IconText>
       </template>
@@ -45,12 +45,20 @@
     <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
       <DeleteBill @close="modal = 'none'" />
     </BottomSheet>
+    <BottomSheet :open="modal === 'edit-person'" @close="modal = 'none'">
+      <EditPerson
+        @submit="editPerson"
+        :person="person"
+        @close="modal = 'none'"
+      />
+    </BottomSheet>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { Bill } from '~~/components/EditBill.vue';
+import { Bill } from '~/components/EditBill.vue';
+import { Person } from '~/components/EditPerson.vue';
 
 const route = useRoute();
 const userId = computed(() => route.params.userId);
@@ -73,10 +81,31 @@ const title = computed(() =>
 const lastLoan = computed(() => data.value?.loans.at(0));
 const bills = computed(() => lastLoan.value?.bills ?? []);
 const debt = computed(() => lastLoan.value?.debt ?? 0);
-type Modal = 'edit-bill' | 'delete-bill' | 'none';
+type Modal = 'edit-bill' | 'delete-bill' | 'edit-person' | 'none';
 const modal = ref<Modal>('none');
 
+const person = computed(() =>
+  data.value
+    ? {
+        id: data.value.id,
+        firstName: data.value.firstName,
+        lastName: data.value.lastName,
+        phoneNumber: data.value.phoneNumber,
+        numOfShares: data.value.numOfShares,
+      }
+    : undefined
+);
+
+const { mutatePerson } = useAddOrEditUser('edit');
+
 const queryClient = useQueryClient();
+
+function editPerson(person: Person) {
+  mutatePerson({ ...person, id: data.value?.id }, () => {
+    modal.value = 'none';
+    queryClient.invalidateQueries({ queryKey: ['loan', userId] });
+  });
+}
 
 const { mutate } = useMutation({
   mutationFn: (bill: Bill) =>
@@ -84,7 +113,8 @@ const { mutate } = useMutation({
       method: 'POST',
       body: bill,
     }),
-  onSuccess: () => queryClient.invalidateQueries(['loan', userId]),
+  onSuccess: () =>
+    queryClient.invalidateQueries({ queryKey: ['loan', userId] }),
 });
 
 function editBill(values: Bill) {

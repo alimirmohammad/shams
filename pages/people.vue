@@ -40,7 +40,7 @@
     </main>
     <BottomNavigation />
     <BottomSheet :open="open" @close="open = false">
-      <EditPerson @close="open = false" />
+      <EditPerson @submit="createPerson" @close="open = false" />
     </BottomSheet>
     <Toast v-if="isToastVisible" toast-class="alert-error">
       {{ errorText }}
@@ -51,6 +51,7 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
 import { NuxtError } from 'nuxt/app';
+import { Person } from '~/components/EditPerson.vue';
 
 const query = ref('');
 const open = ref(false);
@@ -75,6 +76,12 @@ const totalBalance = computed(
 const errorText = computed<string>(
   () => (error.value as NuxtError)?.data.message ?? ''
 );
+
+const { mutatePerson } = useAddOrEditUser('add');
+
+function createPerson(person: Person) {
+  mutatePerson(person, () => (open.value = false));
+}
 
 watchEffect(() => {
   if (isError.value) {
