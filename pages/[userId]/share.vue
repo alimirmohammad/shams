@@ -7,7 +7,7 @@
         </IconButton>
       </template>
       <template #endAction>
-        <IconText title="ویرایش">
+        <IconText title="ویرایش" @click="modal = 'edit-person'">
           <EditIcon />
         </IconText>
       </template>
@@ -40,6 +40,13 @@
     </main>
     <BottomSheet :open="open" @close="open = false">
       <EditBill @submit="editBill" @close="open = false" />
+    </BottomSheet>
+    <BottomSheet :open="modal === 'edit-person'" @close="modal = 'none'">
+      <EditPerson
+        @submit="editPerson"
+        :person="person"
+        @close="modal = 'none'"
+      />
     </BottomSheet>
   </div>
 </template>

@@ -10,7 +10,6 @@ export default defineEventHandler(async event => {
       firstName: true,
       lastName: true,
       numOfShares: true,
-      balance: true,
       loans: {
         take: 1,
         orderBy: {
@@ -24,5 +23,13 @@ export default defineEventHandler(async event => {
     },
   });
 
-  return users;
+  const aggregation = await prisma.shareBill.aggregate({
+    _sum: {
+      amount: true,
+    },
+  });
+
+  const totalBalance = aggregation._sum.amount;
+
+  return { users, totalBalance };
 });

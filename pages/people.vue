@@ -56,22 +56,15 @@ import { Person } from '~/components/EditPerson.vue';
 const query = ref('');
 const open = ref(false);
 
-const {
-  data: people,
-  error,
-  isError,
-  isSuccess,
-  isLoading,
-} = useQuery({
+const { data, error, isError, isSuccess, isLoading } = useQuery({
   queryKey: ['people'],
   queryFn: () => $fetch('/api/people/list'),
 });
 
 const { showToast, isToastVisible } = useToast();
 
-const totalBalance = computed(
-  () => people.value?.reduce((acc, cur) => acc + cur.balance, 0) ?? 0
-);
+const totalBalance = computed(() => data.value?.totalBalance ?? 0);
+const people = computed(() => data.value?.users ?? []);
 
 const errorText = computed<string>(
   () => (error.value as NuxtError)?.data.message ?? ''

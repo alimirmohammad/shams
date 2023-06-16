@@ -10,7 +10,6 @@ export const userSelect = Prisma.validator<Prisma.UserArgs>()({
     lastName: true,
     phoneNumber: true,
     numOfShares: true,
-    balance: true,
     role: true,
     mustChangePassword: true,
   },
