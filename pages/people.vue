@@ -31,7 +31,7 @@
               <PersonCard
                 :name="`${person.firstName} ${person.lastName}`"
                 :numOfShares="person.numOfShares"
-                :debt="person.loans[0]?.debt"
+                :debt="person.debt"
               />
             </NuxtLink>
           </li>

@@ -41,5 +41,5 @@ export default defineEventHandler(async event => {
     },
   }));
 
-  return lastLoans.filter(loan => loan.debt === 0);
+  return lastLoans.filter(loan => loan.debt > 0);
 });

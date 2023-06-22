@@ -31,8 +31,7 @@ export default defineEventHandler(async event => {
           id: true,
           amount: true,
           date: true,
-          debt: true,
-          status: true,
+          description: true,
           bills: {
             orderBy: {
               createdAt: 'desc',
@@ -56,5 +55,15 @@ export default defineEventHandler(async event => {
     });
   }
 
-  return user;
+  const debt = calculateDebt(user.loans);
+
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phoneNumber: user.phoneNumber,
+    numOfShares: user.numOfShares,
+    bills: user.loans.at(0)?.bills,
+    debt,
+  };
 });

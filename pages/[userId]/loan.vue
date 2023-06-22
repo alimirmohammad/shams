@@ -78,9 +78,8 @@ const title = computed(() =>
   data.value ? `${name.value} (${numOfSharesPersian.value})` : ''
 );
 
-const lastLoan = computed(() => data.value?.loans.at(0));
-const bills = computed(() => lastLoan.value?.bills ?? []);
-const debt = computed(() => lastLoan.value?.debt ?? 0);
+const bills = computed(() => data.value?.bills ?? []);
+const debt = computed(() => data.value?.debt ?? 0);
 type Modal = 'edit-bill' | 'delete-bill' | 'edit-person' | 'none';
 const modal = ref<Modal>('none');
 

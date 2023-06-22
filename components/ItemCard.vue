@@ -21,7 +21,7 @@
     <span v-if="username" class="block body-2 text-gray-900 mt-2 text-start">
       {{ username }}
     </span>
-    <p class="body-3 text-gray-900 mt-4 text-start">
+    <p v-if="description" class="body-3 text-gray-900 mt-4 text-start">
       {{ description }}
     </p>
   </div>
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 type Props = {
   date: string;
-  description: string;
+  description?: string | null;
   price?: number;
   title?: string;
   username?: string;

@@ -34,5 +34,5 @@ export default defineEventHandler(async event => {
     debt: calculateDebt(loans),
   }));
 
-  return usersWithLoans.filter(user => user.debt > 0);
+  return usersWithLoans.filter(user => user.debt === 0);
 });
