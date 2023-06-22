@@ -105,7 +105,7 @@ const users = computed(
   () =>
     eligibleList.value?.map(user => ({
       text: `${user.firstName} ${user.lastName}`,
-      value: user.id,
+      value: user.id.toString(),
     })) ?? []
 );
 </script>

@@ -1,32 +1,45 @@
-import { Status } from '@prisma/client';
 import { prisma } from '~/server/utils/prisma';
+import { calculateDebt } from '~/server/utils/debt';
 
 export default defineEventHandler(async event => {
   // protectRoute(event);
   // protectAdminRoute(event);
 
-  const loans = await prisma.loan.findMany({
-    where: {
-      status: Status.ONGOING,
-    },
+  let users = await prisma.user.findMany({
     select: {
-      id: true,
-      amount: true,
-      date: true,
-      debt: true,
-      description: true,
-      user: {
+      firstName: true,
+      lastName: true,
+      loans: {
+        take: 1,
+        orderBy: {
+          createdAt: 'desc',
+        },
         select: {
           id: true,
-          firstName: true,
-          lastName: true,
+          amount: true,
+          date: true,
+          description: true,
+          bills: {
+            select: {
+              amount: true,
+            },
+          },
         },
       },
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
   });
 
-  return loans;
+  const lastLoans = users.map(({ firstName, lastName, loans }) => ({
+    id: loans.at(0)?.id,
+    amount: loans.at(0)?.amount,
+    date: loans.at(0)?.date,
+    description: loans.at(0)?.description ?? '',
+    debt: calculateDebt(loans),
+    user: {
+      firstName,
+      lastName,
+    },
+  }));
+
+  return lastLoans.filter(loan => loan.debt === 0);
 });

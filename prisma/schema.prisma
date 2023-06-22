@@ -27,11 +27,6 @@ model User {
   mustChangePassword Boolean     @default(true)
 }
 
-enum Status {
-  ONGOING
-  COMPLETED
-}
-
 enum Role {
   ADMIN
   USER
@@ -40,8 +35,6 @@ enum Role {
 model Loan {
   id          Int        @id @default(autoincrement())
   amount      Int
-  debt        Int
-  status      Status     @default(ONGOING)
   user        User       @relation(fields: [userId], references: [id])
   userId      Int
   bills       LoanBill[]

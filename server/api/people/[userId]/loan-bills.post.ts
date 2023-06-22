@@ -1,5 +1,5 @@
-import { Status } from '@prisma/client';
 import { prisma } from '~/server/utils/prisma';
+import { calculateDebt } from '~~/server/utils/debt';
 
 export default defineEventHandler(async event => {
   // protectRoute(event);
@@ -33,8 +33,12 @@ export default defineEventHandler(async event => {
         },
         select: {
           id: true,
-          status: true,
-          debt: true,
+          amount: true,
+          bills: {
+            select: {
+              amount: true,
+            },
+          },
         },
       },
     },
@@ -56,43 +60,41 @@ export default defineEventHandler(async event => {
     });
   }
 
-  if (lastLoan.status === Status.COMPLETED) {
+  const debt = calculateDebt(user.loans);
+
+  if (debt === 0) {
     throw createError({
       statusCode: 400,
-      message: 'وام مورد نظر تسویه شده است.',
+      message: 'وام قبلا تسویه شده است.',
     });
   }
 
-  if (lastLoan.debt < amount) {
+  if (debt < amount) {
     throw createError({
       statusCode: 400,
       message: 'مقدار قسط بیش از حد مجاز است.',
     });
   }
 
-  const loan = await prisma.loan.update({
-    where: {
-      id: lastLoan.id,
-    },
+  const loanBill = await prisma.loanBill.create({
     data: {
-      debt: {
-        decrement: amount,
-      },
-      status: lastLoan.debt === amount ? Status.COMPLETED : Status.ONGOING,
-      bills: {
-        create: {
-          amount,
-          date,
-          description,
+      amount,
+      date,
+      description,
+      loan: {
+        connect: {
+          id: lastLoan.id,
         },
       },
     },
     select: {
       id: true,
-      debt: true,
-      status: true,
+      amount: true,
+      date: true,
+      description: true,
+      loanId: true,
     },
   });
 
-  return loan;
+  return loanBill;
 });

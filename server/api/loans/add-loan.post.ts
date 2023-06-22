@@ -1,5 +1,5 @@
-import { Status } from '@prisma/client';
 import { prisma } from '~/server/utils/prisma';
+import { calculateDebt } from '~/server/utils/debt';
 
 export default defineEventHandler(async event => {
   // protectRoute(event);
@@ -25,8 +25,12 @@ export default defineEventHandler(async event => {
           createdAt: 'desc',
         },
         select: {
-          id: true,
-          status: true,
+          amount: true,
+          bills: {
+            select: {
+              amount: true,
+            },
+          },
         },
       },
     },
@@ -39,9 +43,9 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const status = user.loans.at(0)?.status;
+  const debt = calculateDebt(user.loans);
 
-  if (status === Status.ONGOING) {
+  if (debt > 0) {
     throw createError({
       statusCode: 400,
       message: 'کاربر وام تسویه نشده دارد.',
@@ -53,7 +57,6 @@ export default defineEventHandler(async event => {
       amount,
       date,
       description,
-      debt: amount,
       user: {
         connect: {
           id: userId,
