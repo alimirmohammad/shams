@@ -26,20 +26,30 @@ export default defineEventHandler(async event => {
     description,
   };
 
-  const shareBill = await prisma.shareBill.upsert({
-    where: {
-      id,
-    },
-    create: {
+  const select = {
+    id: true,
+    amount: true,
+    date: true,
+    description: true,
+  };
+
+  if (id) {
+    return prisma.shareBill.update({
+      where: { id },
+      data: payload,
+      select,
+    });
+  }
+
+  return prisma.shareBill.create({
+    data: {
       ...payload,
       user: {
         connect: {
-          id: userId,
+          id: +userId,
         },
       },
     },
-    update: payload,
+    select,
   });
-
-  return shareBill;
 });

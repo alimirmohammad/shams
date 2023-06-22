@@ -2,7 +2,7 @@
   <div class="page">
     <Header class="font-fa" :title="title">
       <template #startAction>
-        <IconButton>
+        <IconButton @click="navigateTo('/people')">
           <ArrowRightIcon />
         </IconButton>
       </template>
