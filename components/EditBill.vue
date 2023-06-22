@@ -1,6 +1,11 @@
 <template>
   <Form @submit="onSubmit" :validation-schema="editBillSchema" class="font-fa">
-    <PersianDatePicker id="date" label="تاریخ" class="mb-6" />
+    <PersianDatePicker
+      id="date"
+      label="تاریخ"
+      :initial-value="bill?.date"
+      class="mb-6"
+    />
     <Input
       id="amount"
       inputmode="numeric"
@@ -10,6 +15,7 @@
       containerClass="mb-6"
       :formatter="commafy"
       :transformer="transformPrice"
+      :initialValue="bill?.amount.toString()"
     >
       <template #endAdornment>
         <span class="text-gray-500"> ریال </span>
@@ -21,6 +27,7 @@
       multiline
       rows="5"
       containerClass="mb-10"
+      :initialValue="bill?.description ?? ''"
     />
     <Button block type="submit"> ثبت فیش </Button>
   </Form>
@@ -28,6 +35,7 @@
 
 <script setup lang="ts">
 import { z } from 'zod';
+import { BillWithId } from '~/pages/[userId]/loan.vue';
 
 const schema = z.object({
   amount: z
@@ -56,14 +64,19 @@ const schema = z.object({
 const editBillSchema = toTypedSchema(schema);
 export type Bill = z.infer<typeof schema>;
 
-type Emits = {
-  (e: 'close'): void;
-  (e: 'submit', bill: Bill): void;
+type Props = {
+  bill?: BillWithId | null;
 };
 
+type Emits = {
+  (e: 'close'): void;
+  (e: 'submit', bill: Bill, id?: number): void;
+};
+
+const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 function onSubmit(values: unknown): void {
-  emit('submit', values as Bill);
+  emit('submit', values as Bill, props.bill?.id);
 }
 </script>

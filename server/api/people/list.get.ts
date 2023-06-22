@@ -25,6 +25,7 @@ export default defineEventHandler(async event => {
         },
       },
     },
+    orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
   });
 
   const usersWithLoans = users.map(

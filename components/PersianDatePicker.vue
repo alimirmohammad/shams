@@ -13,7 +13,8 @@
       mode="single"
       :column="1"
       clearable
-      @update:model-value="handleChange($event, shouldValidate)"
+      @update:modelValue="handleChange($event, shouldValidate)"
+      :modelValue="initialValue.split('T').at(0)"
       @close="handleChange(value)"
       @clear="handleChange(value)"
       :styles="{ 'primary-color': '#6972F1' }"

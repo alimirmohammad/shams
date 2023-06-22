@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const { date, amount, description } = await readBody(event);
+  const { date, amount, description, id } = await readBody(event);
 
   if (!date || !amount)
     throw createError({
@@ -76,25 +76,37 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const loanBill = await prisma.loanBill.create({
+  const payload = {
+    amount,
+    date,
+    description,
+  };
+
+  const select = {
+    id: true,
+    amount: true,
+    date: true,
+    description: true,
+    loanId: true,
+  };
+
+  if (id) {
+    return prisma.loanBill.update({
+      where: { id },
+      data: payload,
+      select,
+    });
+  }
+
+  return prisma.loanBill.create({
     data: {
-      amount,
-      date,
-      description,
+      ...payload,
       loan: {
         connect: {
           id: lastLoan.id,
         },
       },
     },
-    select: {
-      id: true,
-      amount: true,
-      date: true,
-      description: true,
-      loanId: true,
-    },
+    select,
   });
-
-  return loanBill;
 });

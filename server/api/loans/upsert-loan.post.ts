@@ -5,7 +5,7 @@ export default defineEventHandler(async event => {
   // protectRoute(event);
   // protectAdminRoute(event);
 
-  const { date, amount, description, userId } = await readBody(event);
+  const { date, amount, description, userId, id } = await readBody(event);
 
   if (!date || !amount || !userId)
     throw createError({
@@ -52,17 +52,25 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const loan = await prisma.loan.create({
-    data: {
-      amount,
-      date,
-      description,
+  const payload = {
+    amount,
+    date,
+    description,
+  };
+
+  const loan = await prisma.loan.upsert({
+    where: {
+      id,
+    },
+    create: {
+      ...payload,
       user: {
         connect: {
           id: userId,
         },
       },
     },
+    update: payload,
     select: {
       id: true,
     },

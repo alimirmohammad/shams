@@ -2,7 +2,7 @@
   <div class="page">
     <Header title="وام‌های تسویه نشده">
       <template #startAction>
-        <IconText title="افزودن" @click="open = true">
+        <IconText title="افزودن" @click="modal = 'edit-loan'">
           <AddIcon />
         </IconText>
       </template>
@@ -22,8 +22,8 @@
       </ul>
     </main>
     <BottomNavigation />
-    <BottomSheet :open="open" @close="open = false">
-      <EditLoan @close="open = false" />
+    <BottomSheet :open="modal === 'edit-loan'" @close="modal = 'none'">
+      <EditLoan @close="modal = 'none'" />
     </BottomSheet>
     <BottomSheet :open="modal === 'edit-bill'" @close="modal = 'none'">
       <EditBill @close="modal = 'none'" />
@@ -37,9 +37,6 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
 
-const query = ref('');
-const open = ref(false);
-
 const {
   data: loans,
   error,
@@ -49,7 +46,7 @@ const {
   queryFn: () => $fetch('/api/loans/list'),
 });
 
-type Modal = 'edit-bill' | 'delete-bill' | 'none';
+type Modal = 'edit-loan' | 'edit-bill' | 'delete-bill' | 'none';
 const modal = ref<Modal>('none');
 </script>
 
