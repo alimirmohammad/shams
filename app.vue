@@ -5,12 +5,3 @@
     </Body>
   </Html>
 </template>
-
-<script setup lang="ts">
-const tabs = [
-  { label: 'سهام', value: 'saham' },
-  { label: 'وام', value: 'vam' },
-];
-
-const active = ref(tabs[0].value);
-</script>
