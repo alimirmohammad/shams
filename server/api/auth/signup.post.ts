@@ -5,8 +5,8 @@ import protectAdminRoute from '~/server/utils/protectAdminRoute';
 import protectRoute from '~/server/utils/protectRoute';
 
 export default defineEventHandler(async event => {
-  // protectRoute(event);
-  // protectAdminRoute(event);
+  protectRoute(event);
+  protectAdminRoute(event);
   const { phoneNumber, firstName, lastName, numOfShares } = await readBody(
     event
   );

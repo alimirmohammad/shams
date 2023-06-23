@@ -1,8 +1,7 @@
 import { prisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
-  // protectRoute(event);
-  // protectAdminRoute(event);
+  protectRoute(event);
 
   const reports = await prisma.report.findMany({
     select: {

@@ -1,8 +1,8 @@
 import { prisma } from '~/server/utils/prisma';
+import protectAdminOrSelfRoute from '~/server/utils/protectAdminOrSelfRoute';
 
 export default defineEventHandler(async event => {
-  // protectRoute(event);
-  // protectAdminRoute(event);
+  protectRoute(event);
 
   const userId = getRouterParam(event, 'userId');
   const searchParams = getQuery(event);
@@ -14,6 +14,7 @@ export default defineEventHandler(async event => {
       message: 'شناسه کاربر نادرست است.',
     });
   }
+  protectAdminOrSelfRoute(event, +userId);
 
   const user = await prisma.user.findUnique({
     where: {

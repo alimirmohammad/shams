@@ -2,8 +2,8 @@ import { prisma } from '~/server/utils/prisma';
 import { calculateDebt } from '~/server/utils/debt';
 
 export default defineEventHandler(async event => {
-  // protectRoute(event);
-  // protectAdminRoute(event);
+  protectRoute(event);
+  protectAdminRoute(event);
 
   const { date, amount, description, userId, id } = await readBody(event);
 

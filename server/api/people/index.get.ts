@@ -1,8 +1,8 @@
 import { prisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
-  // protectRoute(event);
-  // protectAdminRoute(event);
+  protectRoute(event);
+  protectAdminRoute(event);
 
   const users = await prisma.user.findMany({
     select: {

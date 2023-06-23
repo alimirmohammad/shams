@@ -10,13 +10,23 @@ import {
 } from '@tanstack/vue-query';
 // Nuxt 3 app aliases
 import { useState } from '#app';
+import { NuxtError } from 'nuxt/app';
 
 export default defineNuxtPlugin(nuxt => {
   const vueQueryState = useState<DehydratedState | null>('vue-query');
 
   // Modify your Vue Query global settings here
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { staleTime: 5000 } },
+    defaultOptions: {
+      queries: {
+        staleTime: 5000,
+        retry(failureCount, error) {
+          const statusCode = (error as NuxtError).statusCode;
+          if (statusCode >= 400 && statusCode < 500) return false;
+          return failureCount <= 3;
+        },
+      },
+    },
   });
   const options: VueQueryPluginOptions = { queryClient };
 
