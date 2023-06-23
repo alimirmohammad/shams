@@ -90,5 +90,3 @@ function onSubmit(values: unknown): void {
   emit('submit', values as Person);
 }
 </script>
-
-<style scoped></style>

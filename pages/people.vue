@@ -58,7 +58,7 @@ const open = ref(false);
 
 const { data, error, isError, isSuccess, isLoading } = useQuery({
   queryKey: ['people'],
-  queryFn: () => $fetch('/api/people/list'),
+  queryFn: () => $fetch('/api/people'),
 });
 
 const { showToast, isToastVisible } = useToast();

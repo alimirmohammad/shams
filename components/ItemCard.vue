@@ -5,9 +5,10 @@
         <span class="body-2 text-gray-900">{{ formattedPrice }}</span>
         <span class="body-3 text-gray-500">ریال</span>
       </div>
-      <span v-if="title">
-        {{ title }}
-      </span>
+      <template v-if="title">
+        <NuxtLink v-if="to" :to="to">{{ title }}</NuxtLink>
+        <span v-else>{{ title }}</span>
+      </template>
       <div class="flex flex-row items-center gap-5">
         <span class="body-2 text-gray-900">{{ jalali }}</span>
         <button @click="$emit('delete')">
@@ -21,7 +22,7 @@
     <span v-if="username" class="block body-2 text-gray-900 mt-2 text-start">
       {{ username }}
     </span>
-    <p v-if="description" class="body-3 text-gray-900 mt-4 text-start">
+    <p v-if="description" class="body-3 text-gray-900 mt-4 text-start truncate">
       {{ description }}
     </p>
   </div>
@@ -29,11 +30,12 @@
 
 <script setup lang="ts">
 type Props = {
-  date: string;
+  date?: string;
   description?: string | null;
   price?: number;
   title?: string;
   username?: string;
+  to?: string;
 };
 
 type Emits = {
@@ -47,5 +49,7 @@ defineEmits<Emits>();
 const formattedPrice = computed(() =>
   props.price ? convertToPersianDigit(props.price) : ''
 );
-const jalali = computed(() => convertToJalaliString(props.date));
+const jalali = computed(() =>
+  props.date ? convertToJalaliString(props.date) : ''
+);
 </script>

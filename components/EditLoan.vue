@@ -105,7 +105,7 @@ const { data: eligibleList } = useQuery({
 
 const { mutate } = useMutation({
   mutationFn: (values: z.infer<typeof schema>) =>
-    $fetch('/api/loans/upsert-loan', {
+    $fetch('/api/loans', {
       method: 'POST',
       body: { ...values, id: props.loan?.id },
     }),

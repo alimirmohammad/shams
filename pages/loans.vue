@@ -42,7 +42,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 
 const { data, error, isSuccess } = useQuery({
   queryKey: ['loans'],
-  queryFn: () => $fetch('/api/loans/list'),
+  queryFn: () => $fetch('/api/loans'),
 });
 
 const loans = computed(() => data.value ?? []);
@@ -73,7 +73,7 @@ const queryClient = useQueryClient();
 
 const { mutate: deleteLoan } = useMutation({
   mutationFn: (id: number) =>
-    $fetch(`/api/loans/delete-loan`, {
+    $fetch(`/api/loans`, {
       method: 'DELETE',
       body: { id },
     }),
