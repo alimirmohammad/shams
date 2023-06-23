@@ -43,6 +43,42 @@ export default defineEventHandler(async event => {
     });
   }
 
+  const payload = {
+    amount,
+    date,
+    description,
+  };
+
+  const select = {
+    id: true,
+    amount: true,
+    date: true,
+    description: true,
+    userId: true,
+  };
+
+  if (id) {
+    const aggregation = await prisma.loanBill.aggregate({
+      where: { loanId: id },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    if (aggregation._sum.amount != null && aggregation._sum.amount > amount) {
+      throw createError({
+        statusCode: 400,
+        message: 'مقدار وام کمتر از قسط های پرداخت شده است.',
+      });
+    }
+
+    return prisma.loan.update({
+      where: { id },
+      data: payload,
+      select,
+    });
+  }
+
   const debt = calculateDebt(user.loans);
 
   if (debt > 0) {
@@ -52,17 +88,8 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const payload = {
-    amount,
-    date,
-    description,
-  };
-
-  const loan = await prisma.loan.upsert({
-    where: {
-      id,
-    },
-    create: {
+  return prisma.loan.create({
+    data: {
       ...payload,
       user: {
         connect: {
@@ -70,11 +97,6 @@ export default defineEventHandler(async event => {
         },
       },
     },
-    update: payload,
-    select: {
-      id: true,
-    },
+    select,
   });
-
-  return loan;
 });

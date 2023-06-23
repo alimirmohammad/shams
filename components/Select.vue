@@ -12,6 +12,7 @@
       :id="id"
       :value="value"
       v-on="validationListeners"
+      :disabled="disabled"
       class="select select-primary px-8"
       :class="[inputClass, { 'select-error': errorMessage }]"
     >
@@ -35,6 +36,7 @@ type Props = {
   inputClass?: string;
   containerClass?: string;
   multiline?: boolean;
+  disabled?: boolean;
 };
 
 type Emits = {

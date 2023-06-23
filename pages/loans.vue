@@ -15,39 +15,79 @@
             :date="loan.date"
             :description="loan.description"
             :username="`${loan.user.firstName} ${loan.user.lastName}`"
-            @delete="modal = 'delete-bill'"
-            @edit="modal = 'edit-bill'"
+            @delete="openDeleteModal(loan)"
+            @edit="openEditModal(loan)"
           />
         </li>
       </ul>
     </main>
     <BottomNavigation />
     <BottomSheet :open="modal === 'edit-loan'" @close="modal = 'none'">
-      <EditLoan @close="modal = 'none'" />
+      <EditLoan @close="modal = 'none'" :loan="selectedLoan" />
     </BottomSheet>
-    <BottomSheet :open="modal === 'edit-bill'" @close="modal = 'none'">
-      <EditBill @close="modal = 'none'" />
-    </BottomSheet>
-    <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
-      <DeleteBill @close="modal = 'none'" />
+    <BottomSheet :open="modal === 'delete-loan'" @close="modal = 'none'">
+      <DeleteItem
+        @close="modal = 'none'"
+        @confirm="onDeleteLoan(selectedLoan?.id)"
+        title="آیا از حذف این وام اطمینان دارید؟"
+        okLabel="حذف وام"
+        cancelLabel="پشیمان شدم"
+      />
     </BottomSheet>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 
-const {
-  data: loans,
-  error,
-  isSuccess,
-} = useQuery({
+const { data, error, isSuccess } = useQuery({
   queryKey: ['loans'],
   queryFn: () => $fetch('/api/loans/list'),
 });
 
-type Modal = 'edit-loan' | 'edit-bill' | 'delete-bill' | 'none';
+const loans = computed(() => data.value ?? []);
+
+export type SelectedLoan = (typeof loans)['value'][number] | null;
+type Modal = 'edit-loan' | 'delete-loan' | 'none';
 const modal = ref<Modal>('none');
+const selectedLoan = ref<SelectedLoan>(null);
+
+function openDeleteModal(loan: SelectedLoan) {
+  selectedLoan.value = loan;
+  modal.value = 'delete-loan';
+}
+
+function openEditModal(loan: SelectedLoan) {
+  selectedLoan.value = loan;
+  modal.value = 'edit-loan';
+}
+
+function onDeleteLoan(id: number | undefined) {
+  if (!id) return;
+  deleteLoan(id, {
+    onSuccess: () => (modal.value = 'none'),
+  });
+}
+
+const queryClient = useQueryClient();
+
+const { mutate: deleteLoan } = useMutation({
+  mutationFn: (id: number) =>
+    $fetch(`/api/loans/delete-loan`, {
+      method: 'DELETE',
+      body: { id },
+    }),
+  onSuccess: () => {
+    queryClient.invalidateQueries(['eligible']);
+    queryClient.invalidateQueries(['loans']);
+  },
+});
+
+watchEffect(() => {
+  if (modal.value === 'none') {
+    selectedLoan.value = null;
+  }
+});
 </script>
 
 <style scoped>

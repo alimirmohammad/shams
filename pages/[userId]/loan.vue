@@ -34,9 +34,12 @@
         />
       </BottomSheet>
       <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
-        <DeleteBill
+        <DeleteItem
           @close="modal = 'none'"
           @confirm="onDeleteBill(selectedBill?.id)"
+          title="آیا از حذف این فیش اطمینان دارید؟"
+          okLabel="حذف فیش"
+          cancelLabel="پشیمان شدم"
         />
       </BottomSheet>
     </template>

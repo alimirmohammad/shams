@@ -4,9 +4,16 @@
       id="userId"
       label="وام گیرنده"
       :items="users"
+      :disabled="Boolean(loan)"
       containerClass="mb-4"
+      :initial-value="loan?.user.id.toString()"
     />
-    <PersianDatePicker id="date" label="تاریخ" class="mb-4" />
+    <PersianDatePicker
+      id="date"
+      label="تاریخ"
+      class="mb-4"
+      :initialValue="loan?.date"
+    />
     <Input
       id="amount"
       inputmode="numeric"
@@ -14,6 +21,7 @@
       dir="ltr"
       inputClass="pr-14"
       containerClass="mb-4"
+      :initial-value="loan?.amount.toString()"
       :formatter="commafy"
       :transformer="transformPrice"
     >
@@ -24,6 +32,7 @@
     <Input
       id="description"
       label="توضیحات"
+      :initial-value="loan?.description"
       multiline
       rows="3"
       containerClass="mb-6"
@@ -35,11 +44,16 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
+import { SelectedLoan } from '~/pages/loans.vue';
 
+type Props = {
+  loan?: SelectedLoan;
+};
 type Emits = {
   (e: 'close'): void;
 };
 
+const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 const schema = z.object({
   userId: z
@@ -90,10 +104,10 @@ const { data: eligibleList } = useQuery({
 });
 
 const { mutate } = useMutation({
-  mutationFn: (body: z.infer<typeof schema>) =>
+  mutationFn: (values: z.infer<typeof schema>) =>
     $fetch('/api/loans/upsert-loan', {
       method: 'POST',
-      body,
+      body: { ...values, id: props.loan?.id },
     }),
   onSuccess: () => {
     queryClient.invalidateQueries(['eligible']);
@@ -101,11 +115,24 @@ const { mutate } = useMutation({
   },
 });
 
+const currentLoanUser = computed(() =>
+  props.loan
+    ? [
+        {
+          text: `${props.loan.user.firstName} ${props.loan.user.lastName}`,
+          value: props.loan.user.id.toString(),
+        },
+      ]
+    : []
+);
+
 const users = computed(
   () =>
-    eligibleList.value?.map(user => ({
-      text: `${user.firstName} ${user.lastName}`,
-      value: user.id.toString(),
-    })) ?? []
+    eligibleList.value
+      ?.map(user => ({
+        text: `${user.firstName} ${user.lastName}`,
+        value: user.id.toString(),
+      }))
+      .concat(currentLoanUser.value) ?? []
 );
 </script>

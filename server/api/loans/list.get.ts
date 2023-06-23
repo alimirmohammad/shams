@@ -7,6 +7,7 @@ export default defineEventHandler(async event => {
 
   let users = await prisma.user.findMany({
     select: {
+      id: true,
       firstName: true,
       lastName: true,
       loans: {
@@ -29,13 +30,14 @@ export default defineEventHandler(async event => {
     },
   });
 
-  const lastLoans = users.map(({ firstName, lastName, loans }) => ({
+  const lastLoans = users.map(({ id, firstName, lastName, loans }) => ({
     id: loans.at(0)?.id,
     amount: loans.at(0)?.amount,
     date: loans.at(0)?.date,
     description: loans.at(0)?.description ?? '',
     debt: calculateDebt(loans),
     user: {
+      id,
       firstName,
       lastName,
     },
