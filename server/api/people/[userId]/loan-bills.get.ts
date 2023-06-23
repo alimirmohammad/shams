@@ -5,6 +5,9 @@ export default defineEventHandler(async event => {
   // protectAdminRoute(event);
 
   const userId = getRouterParam(event, 'userId');
+  const searchParams = getQuery(event);
+  const from = (searchParams.from as string) || undefined;
+  const to = (searchParams.to as string) || undefined;
   if (!userId || isNaN(+userId) || !Number.isInteger(+userId)) {
     throw createError({
       statusCode: 400,
@@ -33,8 +36,15 @@ export default defineEventHandler(async event => {
           date: true,
           description: true,
           bills: {
+            take: from || to ? undefined : 10,
             orderBy: {
-              createdAt: 'desc',
+              date: 'desc',
+            },
+            where: {
+              date: {
+                gte: from,
+                lte: to,
+              },
             },
             select: {
               id: true,
@@ -55,7 +65,21 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const debt = calculateDebt(user.loans);
+  const loans = await prisma.loan.findMany({
+    where: { userId: +userId },
+    take: 1,
+    orderBy: { createdAt: 'desc' },
+    select: {
+      amount: true,
+      bills: {
+        select: {
+          amount: true,
+        },
+      },
+    },
+  });
+
+  const debt = calculateDebt(loans);
 
   return {
     id: user.id,

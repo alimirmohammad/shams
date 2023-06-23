@@ -5,6 +5,9 @@ export default defineEventHandler(async event => {
   // protectAdminRoute(event);
 
   const userId = getRouterParam(event, 'userId');
+  const searchParams = getQuery(event);
+  const from = (searchParams.from as string) || undefined;
+  const to = (searchParams.to as string) || undefined;
   if (!userId || isNaN(+userId) || !Number.isInteger(+userId)) {
     throw createError({
       statusCode: 400,
@@ -22,9 +25,15 @@ export default defineEventHandler(async event => {
       lastName: true,
       numOfShares: true,
       bills: {
-        take: 10,
+        take: from || to ? undefined : 10,
         orderBy: {
-          createdAt: 'desc',
+          date: 'desc',
+        },
+        where: {
+          date: {
+            gte: from,
+            lte: to,
+          },
         },
         select: {
           id: true,

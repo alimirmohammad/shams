@@ -5,7 +5,10 @@
       :class="{ 'modal-open': open }"
       @click.self="$emit('close')"
     >
-      <div class="modal-box shadow py-10 px-4 rounded-t-3xl">
+      <div
+        class="modal-box shadow py-10 px-4 rounded-t-3xl"
+        :class="{ 'overflow-visible': overflow }"
+      >
         <slot :key="open" />
       </div>
     </div>
@@ -15,6 +18,7 @@
 <script setup lang="ts">
 type Props = {
   open: boolean;
+  overflow?: boolean;
 };
 
 type Emits = {

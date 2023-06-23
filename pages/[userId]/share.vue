@@ -1,7 +1,7 @@
 <template>
   <Person>
     <template #header>
-      <IconText title="فیلتر">
+      <IconText title="فیلتر" @click="modal = 'edit-filters'">
         <FilterIcon />
       </IconText>
       <PriceSummary title="ارزش سهام" :price="balance" />
@@ -42,6 +42,18 @@
           cancelLabel="پشیمان شدم"
         />
       </BottomSheet>
+      <BottomSheet
+        :open="modal === 'edit-filters'"
+        overflow
+        @close="modal = 'none'"
+      >
+        <FilterFields
+          @submit="updateFilters"
+          @close="modal = 'none'"
+          :from="filters.from"
+          :to="filters.to"
+        />
+      </BottomSheet>
     </template>
   </Person>
 </template>
@@ -50,17 +62,33 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { Bill } from '~/components/EditBill.vue';
 import { BillWithId } from './loan.vue';
+import { Filters } from '~/components/FilterFields.vue';
 
-type Modal = 'edit-bill' | 'delete-bill' | 'none';
+type Modal = 'edit-bill' | 'delete-bill' | 'edit-filters' | 'none';
 
 const route = useRoute();
 const modal = ref<Modal>('none');
 const selectedBill = ref<BillWithId | null>(null);
 const userId = computed(() => route.params.userId);
+const filters = reactive<{
+  from?: Date;
+  to?: Date;
+}>({
+  from: undefined,
+  to: undefined,
+});
+
+const searchParams = computed(() => {
+  const result = new URLSearchParams();
+  result.append('from', filters.from?.toISOString() ?? '');
+  result.append('to', filters.to?.toISOString() ?? '');
+  return result;
+});
 
 const { data } = useQuery({
-  queryKey: ['share', userId],
-  queryFn: () => $fetch(`/api/people/${userId.value}/share-bills`),
+  queryKey: ['share', userId, filters],
+  queryFn: () =>
+    $fetch(`/api/people/${userId.value}/share-bills?${searchParams.value}`),
 });
 
 const bills = computed(() => data.value?.bills ?? []);
@@ -111,6 +139,20 @@ function editBill(values: Bill, id?: number) {
       onSuccess: () => (modal.value = 'none'),
     }
   );
+}
+
+function updateFilters(value: Filters) {
+  if (value.from) {
+    filters.from = value.from;
+  } else {
+    filters.from = undefined;
+  }
+  if (value.to) {
+    filters.to = value.to;
+  } else {
+    filters.to = undefined;
+  }
+  modal.value = 'none';
 }
 
 watchEffect(() => {
