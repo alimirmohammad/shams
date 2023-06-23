@@ -29,7 +29,7 @@
       containerClass="mb-10"
       :initialValue="bill?.description ?? ''"
     />
-    <Button block type="submit"> ثبت فیش </Button>
+    <Button block type="submit" :loading="loading"> ثبت فیش </Button>
   </Form>
 </template>
 
@@ -66,6 +66,7 @@ export type Bill = z.infer<typeof schema>;
 
 type Props = {
   bill?: BillWithId | null;
+  loading?: boolean;
 };
 
 type Emits = {

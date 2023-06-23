@@ -6,7 +6,9 @@
       <slot name="startAction" />
     </div>
     <div>
-      <h1 class="headline-3 text-gray-900">{{ title }}</h1>
+      <slot>
+        <h1 class="headline-3 text-gray-900">{{ title }}</h1>
+      </slot>
     </div>
     <div class="min-w-[24px]">
       <slot name="endAction" />
@@ -16,7 +18,7 @@
 
 <script setup lang="ts">
 type Props = {
-  title: string;
+  title?: string;
 };
 
 defineProps<Props>();

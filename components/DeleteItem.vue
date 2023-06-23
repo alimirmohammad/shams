@@ -4,7 +4,9 @@
       {{ title }}
     </h3>
     <div class="flex flex-row justify-center items-center gap-4">
-      <Button sm @click="$emit('confirm')"> {{ okLabel }} </Button>
+      <Button sm @click="$emit('confirm')" :loading="loading">
+        {{ okLabel }}
+      </Button>
       <Button sm outline @click="$emit('close')"> {{ cancelLabel }} </Button>
     </div>
   </div>
@@ -15,6 +17,7 @@ type Props = {
   title: string;
   okLabel: string;
   cancelLabel: string;
+  loading?: boolean;
 };
 
 type Emits = {

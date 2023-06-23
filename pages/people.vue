@@ -9,7 +9,7 @@
     </Header>
     <main class="bg-white text-center overflow-auto p-4">
       <div v-if="isLoading" class="h-full flex items-center justify-center">
-        <Spinner />
+        <LoadingRipple />
       </div>
       <template v-if="isSuccess">
         <PriceSummary
@@ -20,6 +20,7 @@
         />
         <Input
           v-model="query"
+          no-validate
           id="query"
           label="جستجو"
           type="text"
@@ -40,17 +41,21 @@
     </main>
     <BottomNavigation />
     <BottomSheet :open="open" @close="open = false">
-      <EditPerson @submit="createPerson" @close="open = false" />
+      <EditPerson
+        @submit="createPerson"
+        @close="open = false"
+        :loading="upsertLoading"
+      />
     </BottomSheet>
-    <Toast v-if="isToastVisible" toast-class="alert-error">
-      {{ errorText }}
-    </Toast>
+    <ToastError
+      :error="error || upsertError"
+      :is-error="isError || upsertIsError"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { NuxtError } from 'nuxt/app';
 import { Person } from '~/components/EditPerson.vue';
 
 const query = ref('');
@@ -61,26 +66,26 @@ const { data, error, isError, isSuccess, isLoading } = useQuery({
   queryFn: () => $fetch('/api/people'),
 });
 
-const { showToast, isToastVisible } = useToast();
-
 const totalBalance = computed(() => data.value?.totalBalance ?? 0);
-const people = computed(() => data.value?.users ?? []);
-
-const errorText = computed<string>(
-  () => (error.value as NuxtError)?.data.message ?? ''
+const people = computed(
+  () =>
+    data.value?.users.filter(
+      user =>
+        user.firstName.includes(query.value) ||
+        user.lastName.includes(query.value)
+    ) ?? []
 );
 
-const { mutatePerson } = useAddOrEditUser('add');
+const {
+  mutatePerson,
+  isLoading: upsertLoading,
+  isError: upsertIsError,
+  error: upsertError,
+} = useAddOrEditUser('add');
 
 function createPerson(person: Person) {
   mutatePerson(person, () => (open.value = false));
 }
-
-watchEffect(() => {
-  if (isError.value) {
-    showToast();
-  }
-});
 </script>
 
 <style scoped>

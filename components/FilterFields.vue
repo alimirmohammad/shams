@@ -12,7 +12,7 @@
       :initialValue="to?.toISOString()"
       class="mb-6"
     />
-    <Button block type="submit"> اعمال فیلتر </Button>
+    <Button block type="submit" :loading="loading"> اعمال فیلتر </Button>
   </Form>
 </template>
 
@@ -55,6 +55,7 @@ export type Filters = z.infer<typeof schema>;
 type Props = {
   from?: Date;
   to?: Date;
+  loading?: boolean;
 };
 
 type Emits = {

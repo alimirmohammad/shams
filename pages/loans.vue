@@ -7,7 +7,13 @@
         </IconText>
       </template>
     </Header>
-    <main class="bg-white text-center overflow-auto p-4">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center w-full h-full bg-white"
+    >
+      <LoadingRipple />
+    </div>
+    <main v-else class="bg-white text-center overflow-auto p-4">
       <ul class="flex flex-col gap-4">
         <li v-for="loan in loans" :key="loan.id">
           <ItemCard
@@ -32,15 +38,20 @@
         title="آیا از حذف این وام اطمینان دارید؟"
         okLabel="حذف وام"
         cancelLabel="پشیمان شدم"
+        :loading="deleteLoading"
       />
     </BottomSheet>
+    <ToastError
+      :error="error || deleteError"
+      :is-error="isError || deleteIsError"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 
-const { data, error, isSuccess } = useQuery({
+const { data, error, isError, isLoading } = useQuery({
   queryKey: ['loans'],
   queryFn: () => $fetch('/api/loans'),
 });
@@ -71,16 +82,22 @@ function onDeleteLoan(id: number | undefined) {
 
 const queryClient = useQueryClient();
 
-const { mutate: deleteLoan } = useMutation({
+const {
+  mutate: deleteLoan,
+  isLoading: deleteLoading,
+  error: deleteError,
+  isError: deleteIsError,
+} = useMutation({
   mutationFn: (id: number) =>
     $fetch(`/api/loans`, {
       method: 'DELETE',
       body: { id },
     }),
-  onSuccess: () => {
-    queryClient.invalidateQueries(['eligible']);
-    queryClient.invalidateQueries(['loans']);
-  },
+  onSuccess: () =>
+    Promise.allSettled([
+      queryClient.invalidateQueries(['eligible']),
+      queryClient.invalidateQueries(['loans']),
+    ]),
 });
 
 watchEffect(() => {

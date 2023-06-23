@@ -7,7 +7,7 @@ export default function useAddOrEditUser(mode: 'add' | 'edit') {
   const isAdd = mode === 'add';
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isError, isLoading, error } = useMutation({
     mutationFn: (values: PersonPayload) =>
       $fetch(isAdd ? '/api/auth/signup' : '/api/people/edit-person', {
         method: isAdd ? 'POST' : 'PUT',
@@ -22,5 +22,5 @@ export default function useAddOrEditUser(mode: 'add' | 'edit') {
     });
   }
 
-  return { mutatePerson };
+  return { mutatePerson, isError, isLoading, error };
 }

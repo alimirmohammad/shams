@@ -6,7 +6,13 @@
       </IconText>
       <PriceSummary title="ارزش سهام" :price="balance" />
     </template>
-    <ul class="flex flex-col gap-4">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center w-full h-full bg-white"
+    >
+      <LoadingRipple />
+    </div>
+    <ul v-else class="flex flex-col gap-4">
       <li v-for="bill in bills" :key="bill.id">
         <ItemCard
           :price="bill.amount"
@@ -31,6 +37,7 @@
           @submit="editBill"
           @close="modal = 'none'"
           :bill="selectedBill"
+          :loading="upsertIsLoading"
         />
       </BottomSheet>
       <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
@@ -40,6 +47,7 @@
           title="آیا از حذف این فیش اطمینان دارید؟"
           okLabel="حذف فیش"
           cancelLabel="پشیمان شدم"
+          :loading="deleteIsLoading"
         />
       </BottomSheet>
       <BottomSheet
@@ -52,9 +60,14 @@
           @close="modal = 'none'"
           :from="filters.from"
           :to="filters.to"
+          :loading="isLoading"
         />
       </BottomSheet>
     </template>
+    <ToastError
+      :error="error || deleteError || upsertError"
+      :is-error="isError || deleteIsError || upsertIsError"
+    />
   </Person>
 </template>
 
@@ -85,7 +98,7 @@ const searchParams = computed(() => {
   return result;
 });
 
-const { data } = useQuery({
+const { data, error, isError, isLoading } = useQuery({
   queryKey: ['share', userId, filters],
   queryFn: () =>
     $fetch(`/api/people/${userId.value}/share-bills?${searchParams.value}`),
@@ -113,7 +126,12 @@ function onDeleteBill(id: number | undefined) {
 
 const queryClient = useQueryClient();
 
-const { mutate } = useMutation({
+const {
+  mutate,
+  error: upsertError,
+  isError: upsertIsError,
+  isLoading: upsertIsLoading,
+} = useMutation({
   mutationFn: (bill: Bill & { id?: number }) =>
     $fetch(`/api/people/${userId.value}/share-bills`, {
       method: 'POST',
@@ -122,7 +140,12 @@ const { mutate } = useMutation({
   onSuccess: () => queryClient.invalidateQueries(['share', userId]),
 });
 
-const { mutate: deleteBill } = useMutation({
+const {
+  mutate: deleteBill,
+  error: deleteError,
+  isError: deleteIsError,
+  isLoading: deleteIsLoading,
+} = useMutation({
   mutationFn: (id: number) =>
     $fetch(`/api/people/${userId.value}/share-bills`, {
       method: 'DELETE',

@@ -1,7 +1,16 @@
 <template>
   <div class="page">
     <Header title="گزارشات" />
-    <main class="bg-white text-center overflow-auto shadow-xl p-4 pt-10 pb-24">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center w-full h-full bg-white"
+    >
+      <LoadingRipple />
+    </div>
+    <main
+      v-else
+      class="bg-white text-center overflow-auto shadow-xl p-4 pt-10 pb-24"
+    >
       <ul class="flex flex-col gap-4">
         <li v-for="report in reports" :key="report.id">
           <ItemCard
@@ -33,15 +42,20 @@
         title="آیا از حذف این گزارش اطمینان دارید؟"
         okLabel="حذف گزارش"
         cancelLabel="پشیمان شدم"
+        :loading="deleteIsLoading"
       />
     </BottomSheet>
+    <ToastError
+      :error="error || deleteError"
+      :is-error="isError || deleteIsError"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 
-const { data, error, isSuccess } = useQuery({
+const { data, error, isError, isLoading } = useQuery({
   queryKey: ['reports'],
   queryFn: () => $fetch('/api/reports'),
 });
@@ -72,7 +86,12 @@ function onDeleteReport(id: number | undefined) {
 
 const queryClient = useQueryClient();
 
-const { mutate: deleteLoan } = useMutation({
+const {
+  mutate: deleteLoan,
+  error: deleteError,
+  isError: deleteIsError,
+  isLoading: deleteIsLoading,
+} = useMutation({
   mutationFn: (id: number) =>
     $fetch('/api/reports', {
       method: 'DELETE',

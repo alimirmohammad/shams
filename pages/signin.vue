@@ -37,16 +37,15 @@
         <EyeIcon />
       </template>
     </Input>
-    <Button type="submit" block> ورود </Button>
-    <Toast v-if="isToastVisible" toast-class="alert-error"> {{ err }} </Toast>
+    <Button type="submit" block :loading="isLoading"> ورود </Button>
+    <ToastError :error="error" :is-error="isError" />
   </Form>
 </template>
 
 <script setup lang="ts">
 import { Role } from '@prisma/client';
-import { NuxtError } from 'nuxt/app';
+import { useMutation } from '@tanstack/vue-query';
 import { z } from 'zod';
-import useToast from '~/composables/useToast';
 
 const schema = z.object({
   phoneNumber: z
@@ -60,23 +59,22 @@ const schema = z.object({
 });
 
 const loginSchema = toTypedSchema(schema);
+type Payload = z.infer<typeof schema>;
 
-const { showToast, isToastVisible } = useToast();
-const err = ref('');
+const { mutate, error, isError, isLoading } = useMutation({
+  mutationFn: (body: Payload) =>
+    $fetch('/api/auth/signin', {
+      method: 'POST',
+      body,
+    }),
+  onSuccess: res => {
+    if (res.mustChangePassword) return navigateTo('/change-password');
+    if (res.role === Role.ADMIN) return navigateTo('/people');
+    navigateTo(`/${res.id}/share`);
+  },
+});
 
 async function onSubmit(values: unknown) {
-  const { phoneNumber, password } = values as z.infer<typeof schema>;
-  try {
-    const { role, id, mustChangePassword } = await $fetch('/api/auth/signin', {
-      method: 'POST',
-      body: { phoneNumber, password },
-    });
-    if (mustChangePassword) return navigateTo('/change-password');
-    if (role === Role.ADMIN) return navigateTo('/people');
-    navigateTo(`/${id}/share`);
-  } catch (e) {
-    err.value = (e as NuxtError).data.message;
-    showToast();
-  }
+  mutate(values as Payload);
 }
 </script>

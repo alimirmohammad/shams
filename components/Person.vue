@@ -1,6 +1,12 @@
 <template>
   <div class="page">
     <Header class="font-fa" :title="title">
+      <div
+        v-if="personIsLoading"
+        class="flex items-center justify-center w-full h-full bg-white"
+      >
+        <LoadingRipple />
+      </div>
       <template #startAction>
         <IconButton @click="navigateTo('/people')">
           <ArrowRightIcon />
@@ -12,7 +18,13 @@
         </IconText>
       </template>
     </Header>
-    <main class="bg-white text-center overflow-auto shadow-xl p-4 pb-24">
+    <div
+      v-if="personIsLoading"
+      class="flex items-center justify-center w-full h-full bg-white"
+    >
+      <LoadingRipple />
+    </div>
+    <main v-else class="bg-white text-center overflow-auto shadow-xl p-4 pb-24">
       <Tabs :tabs="tabs" :active-tab="$route.path" class="mx-auto mb-4" />
       <div class="flex flex-row items-center justify-between mb-4">
         <slot name="header" />
@@ -25,8 +37,13 @@
         @submit="editPerson"
         :person="person"
         @close="showPersonModal = false"
+        :loading="isLoading"
       />
     </BottomSheet>
+    <ToastError
+      :error="error || personError"
+      :is-error="isError || personIsError"
+    />
   </div>
 </template>
 
@@ -41,7 +58,12 @@ const tabs = computed(() => [
   { label: 'وام', to: `/${userId.value}/loan` },
 ]);
 
-const { data } = useQuery({
+const {
+  data,
+  isLoading: personIsLoading,
+  isError: personIsError,
+  error: personError,
+} = useQuery({
   queryKey: ['loan', userId],
   queryFn: () => $fetch(`/api/people/${userId.value}/loan-bills`),
 });
@@ -66,14 +88,14 @@ const person = computed(() =>
     : undefined
 );
 
-const { mutatePerson } = useAddOrEditUser('edit');
+const { mutatePerson, error, isError, isLoading } = useAddOrEditUser('edit');
 
 const queryClient = useQueryClient();
 
 function editPerson(person: Person) {
   mutatePerson({ ...person, id: data.value?.id }, () => {
     showPersonModal.value = false;
-    queryClient.invalidateQueries({ queryKey: ['loan', userId] });
+    return queryClient.invalidateQueries({ queryKey: ['loan', userId] });
   });
 }
 </script>

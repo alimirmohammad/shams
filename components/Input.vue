@@ -12,7 +12,10 @@
       :is="multiline ? 'textarea' : 'input'"
       :id="id"
       v-bind="$attrs"
-      :value="formatter(value)"
+      :value="noValidate ? formatter(modelValue ?? '') : formatter(value)"
+      @input="
+        noValidate ? $emit('update:modelValue', $event.target.value) : () => {}
+      "
       v-on="validationListeners"
       class="w-full"
       :class="[
@@ -47,13 +50,13 @@ type Props = {
   id: string;
   label: string;
   initialValue?: string;
-  error?: boolean;
-  errorText?: string;
+  modelValue?: string;
   inputClass?: string;
   containerClass?: string;
   multiline?: boolean;
   formatter?: (value: string) => string;
   transformer?: (e: Event) => string;
+  noValidate?: boolean;
 };
 
 type Emits = {

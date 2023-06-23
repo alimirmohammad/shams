@@ -13,13 +13,14 @@
         </div>
       </div>
     </div>
+    <ToastError :error="error" :is-error="isError" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Role } from '@prisma/client';
 
-const { data, isSuccess } = useMe();
+const { data, isSuccess, isError, error } = useMe();
 
 watchEffect(async () => {
   await delay(2);

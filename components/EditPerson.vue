@@ -45,7 +45,7 @@
       containerClass="mb-14"
       :initial-value="person?.numOfShares.toString()"
     />
-    <Button block type="submit">ثبت سهام دار</Button>
+    <Button block type="submit" :loading="loading">ثبت سهام دار</Button>
   </Form>
 </template>
 
@@ -76,6 +76,7 @@ export type Person = z.infer<typeof schema>;
 
 type Props = {
   person?: Person;
+  loading?: boolean;
 };
 
 type Emits = {

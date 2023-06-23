@@ -37,7 +37,8 @@
       rows="3"
       containerClass="mb-6"
     />
-    <Button block type="submit"> ثبت فیش </Button>
+    <Button block type="submit" :loading="isLoading"> ثبت فیش </Button>
+    <ToastError :error="error" :is-error="isError" />
   </Form>
 </template>
 
@@ -45,6 +46,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
 import { SelectedLoan } from '~/pages/loans.vue';
+import ToastError from './ToastError.vue';
 
 type Props = {
   loan?: SelectedLoan;
@@ -103,16 +105,17 @@ const { data: eligibleList } = useQuery({
   queryFn: () => $fetch('/api/people/eligible'),
 });
 
-const { mutate } = useMutation({
+const { mutate, isLoading, error, isError } = useMutation({
   mutationFn: (values: z.infer<typeof schema>) =>
     $fetch('/api/loans', {
       method: 'POST',
       body: { ...values, id: props.loan?.id },
     }),
-  onSuccess: () => {
-    queryClient.invalidateQueries(['eligible']);
-    queryClient.invalidateQueries(['loans']);
-  },
+  onSuccess: () =>
+    Promise.allSettled([
+      queryClient.invalidateQueries(['eligible']),
+      queryClient.invalidateQueries(['loans']),
+    ]),
 });
 
 const currentLoanUser = computed(() =>

@@ -15,12 +15,13 @@
       containerClass="mb-10"
       :initialValue="report?.description"
     />
-    <Button block type="submit">
+    <Button block type="submit" :loading="isLoading">
       ثبت گزارش
       <template #icon>
         <TickSquareIcon white />
       </template>
     </Button>
+    <ToastError :error="error" :is-error="isError" />
   </Form>
 </template>
 
@@ -50,7 +51,7 @@ type ReportWithId = Report & { id: number };
 
 const queryClient = useQueryClient();
 
-const { mutate } = useMutation({
+const { mutate, error, isError, isLoading } = useMutation({
   mutationFn: (values: Report) =>
     $fetch('/api/reports', {
       method: 'POST',

@@ -19,18 +19,14 @@
         <EyeIcon />
       </template>
     </Input>
-    <Button type="submit" block> تغییر رمز عبور </Button>
-    <Toast v-if="isToastVisible" toast-class="alert-error">
-      {{ errorText }}
-    </Toast>
+    <Button type="submit" block :loading="isLoading"> تغییر رمز عبور </Button>
+    <ToastError :error="error" :is-error="isError" />
   </Form>
 </template>
 
 <script setup lang="ts">
 import { useMutation } from '@tanstack/vue-query';
-import { NuxtError } from 'nuxt/app';
 import { z } from 'zod';
-import useToast from '~/composables/useToast';
 
 const schema = z.object({
   password: z
@@ -42,9 +38,7 @@ const schema = z.object({
 const changePasswordSchema = toTypedSchema(schema);
 type Payload = z.infer<typeof schema>;
 
-const { showToast, isToastVisible } = useToast();
-
-const { mutate, error, isError } = useMutation({
+const { mutate, error, isError, isLoading } = useMutation({
   mutationFn: (body: z.infer<typeof schema>) =>
     $fetch(`/api/auth/change-password`, {
       method: 'POST',
@@ -52,19 +46,9 @@ const { mutate, error, isError } = useMutation({
     }),
 });
 
-const errorText = computed(
-  () => (error.value as NuxtError)?.data.message ?? ''
-);
-
 async function onSubmit(values: unknown) {
   mutate(values as Payload, {
     onSuccess: () => navigateTo('/signin'),
   });
 }
-
-watchEffect(() => {
-  if (isError.value) {
-    showToast();
-  }
-});
 </script>
