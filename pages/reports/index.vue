@@ -22,7 +22,7 @@
           />
         </li>
       </ul>
-      <FixedBottom has-bottom-sheet>
+      <FixedBottom v-if="isAdmin" has-bottom-sheet>
         <Button block @click="modal = 'edit-report'">
           ثبت گزارش
           <template #icon>
@@ -31,11 +31,20 @@
         </Button>
       </FixedBottom>
     </main>
-    <BottomNavigation />
-    <BottomSheet :open="modal === 'edit-report'" @close="modal = 'none'">
+    <BottomNavigation v-if="isAdmin" />
+    <BottomNavigationRestricted v-else />
+    <BottomSheet
+      v-if="isAdmin"
+      :open="modal === 'edit-report'"
+      @close="modal = 'none'"
+    >
       <EditReport @close="modal = 'none'" :report="selectedReport" />
     </BottomSheet>
-    <BottomSheet :open="modal === 'delete-report'" @close="modal = 'none'">
+    <BottomSheet
+      v-if="isAdmin"
+      :open="modal === 'delete-report'"
+      @close="modal = 'none'"
+    >
       <DeleteItem
         @close="modal = 'none'"
         @confirm="onDeleteReport(selectedReport?.id)"
@@ -53,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 
 const { data, error, isError, isLoading } = useQuery({
@@ -61,6 +71,9 @@ const { data, error, isError, isLoading } = useQuery({
 });
 
 const reports = computed(() => data.value ?? []);
+
+const { data: me } = useMe();
+const isAdmin = computed(() => me.value?.role === Role.ADMIN);
 
 export type SelectedReport = (typeof reports)['value'][number] | null;
 type Modal = 'edit-report' | 'delete-report' | 'none';

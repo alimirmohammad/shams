@@ -23,7 +23,7 @@
         />
       </li>
     </ul>
-    <FixedBottom>
+    <FixedBottom v-if="isAdmin">
       <Button block @click="modal = 'edit-bill'">
         افزودن فیش
         <template #icon>
@@ -32,7 +32,11 @@
       </Button>
     </FixedBottom>
     <template #bottom-sheet>
-      <BottomSheet :open="modal === 'edit-bill'" @close="modal = 'none'">
+      <BottomSheet
+        v-if="isAdmin"
+        :open="modal === 'edit-bill'"
+        @close="modal = 'none'"
+      >
         <EditBill
           @submit="editBill"
           @close="modal = 'none'"
@@ -40,7 +44,11 @@
           :loading="upsertIsLoading"
         />
       </BottomSheet>
-      <BottomSheet :open="modal === 'delete-bill'" @close="modal = 'none'">
+      <BottomSheet
+        v-if="isAdmin"
+        :open="modal === 'delete-bill'"
+        @close="modal = 'none'"
+      >
         <DeleteItem
           @close="modal = 'none'"
           @confirm="onDeleteBill(selectedBill?.id)"
@@ -50,6 +58,7 @@
           :loading="deleteIsLoading"
         />
       </BottomSheet>
+      <BottomNavigationRestricted v-else />
       <BottomSheet
         :open="modal === 'edit-filters'"
         overflow
@@ -72,6 +81,7 @@
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { Bill } from '~/components/EditBill.vue';
 import { Filters } from '~/components/FilterFields.vue';
@@ -90,6 +100,9 @@ const filters = reactive<{
   from: undefined,
   to: undefined,
 });
+
+const { data: me } = useMe();
+const isAdmin = computed(() => me.value?.role === Role.ADMIN);
 
 const searchParams = computed(() => {
   const result = new URLSearchParams();

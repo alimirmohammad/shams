@@ -7,12 +7,12 @@
       >
         <LoadingRipple />
       </div>
-      <template #startAction>
+      <template v-if="isAdmin" #startAction>
         <IconButton @click="navigateTo('/people')">
           <ArrowRightIcon />
         </IconButton>
       </template>
-      <template #endAction>
+      <template v-if="isAdmin" #endAction>
         <IconText title="ویرایش" @click="showPersonModal = true">
           <EditIcon />
         </IconText>
@@ -32,7 +32,11 @@
       <slot />
     </main>
     <slot name="bottom-sheet" />
-    <BottomSheet :open="showPersonModal" @close="showPersonModal = false">
+    <BottomSheet
+      v-if="isAdmin"
+      :open="showPersonModal"
+      @close="showPersonModal = false"
+    >
       <EditPerson
         @submit="editPerson"
         :person="person"
@@ -48,6 +52,7 @@
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { Person } from '~/components/EditPerson.vue';
 
@@ -57,6 +62,9 @@ const tabs = computed(() => [
   { label: 'سهام', to: `/${userId.value}/share` },
   { label: 'وام', to: `/${userId.value}/loan` },
 ]);
+
+const { data: me } = useMe();
+const isAdmin = computed(() => me.value?.role === Role.ADMIN);
 
 const {
   data,

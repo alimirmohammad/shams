@@ -11,10 +11,10 @@
       </template>
       <div class="flex flex-row items-center gap-5">
         <span class="body-2 text-gray-900">{{ jalali }}</span>
-        <button @click="$emit('delete')">
+        <button v-if="isAdmin" @click="$emit('delete')">
           <DeleteIcon />
         </button>
-        <button @click="$emit('edit')">
+        <button v-if="isAdmin" @click="$emit('edit')">
           <EditIcon />
         </button>
       </div>
@@ -29,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client';
+
 type Props = {
   date?: string;
   description?: string | null;
@@ -45,6 +47,9 @@ type Emits = {
 
 const props = defineProps<Props>();
 defineEmits<Emits>();
+
+const { data: me } = useMe();
+const isAdmin = computed(() => me.value?.role === Role.ADMIN);
 
 const formattedPrice = computed(() =>
   props.price ? convertToPersianDigit(props.price) : ''
