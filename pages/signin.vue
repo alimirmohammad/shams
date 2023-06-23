@@ -6,7 +6,7 @@
   >
     <Logo class="mx-auto" />
     <h1 class="my-4 text-primary-500 font-bold text-3xl">شمس</h1>
-    <h4 class="mb-3 text-primary-500 headline-3">صندوق قرض الحسنه</h4>
+    <h4 class="mb-3 text-primary-500 headline-3">صندوق خانوادگی</h4>
     <h4 class="mb-12 text-primary-500 label-3">تأسیس ۱۳۸۲</h4>
     <Input
       id="phoneNumber"
@@ -67,15 +67,13 @@ const err = ref('');
 async function onSubmit(values: unknown) {
   const { phoneNumber, password } = values as z.infer<typeof schema>;
   try {
-    const { role, id } = await $fetch('/api/auth/signin', {
+    const { role, id, mustChangePassword } = await $fetch('/api/auth/signin', {
       method: 'POST',
       body: { phoneNumber, password },
     });
-    if (role === Role.ADMIN) {
-      navigateTo('/people');
-    } else {
-      navigateTo(`/${id}/share`);
-    }
+    if (mustChangePassword) return navigateTo('/change-password');
+    if (role === Role.ADMIN) return navigateTo('/people');
+    navigateTo(`/${id}/share`);
   } catch (e) {
     err.value = (e as NuxtError).data.message;
     showToast();

@@ -15,7 +15,8 @@ export default defineEventHandler(async event => {
   const hashedPassword = await hash(password, 12);
   await prisma.user.update({
     where: { id: user.id },
-    data: { password: hashedPassword },
+    data: { password: hashedPassword, mustChangePassword: false },
   });
-  return { message: 'رمز عبور با موفقیت تغییر یافت.' };
+  deleteCookie(event, 'token');
+  return { message: 'رمز عبور با موفقیت تغییر یافت' };
 });
