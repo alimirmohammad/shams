@@ -14,7 +14,7 @@ type ToastClass =
   | 'alert-error';
 
 type Props = {
-  toastClass: ToastClass;
+  toastClass?: ToastClass;
 };
 
 defineProps<Props>();

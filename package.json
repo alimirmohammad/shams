@@ -5,12 +5,14 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.6.4",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
+    "@vite-pwa/assets-generator": "^0.0.3",
     "@vite-pwa/nuxt": "^0.1.0",
     "daisyui": "^2.51.6",
     "nuxt": "^3.3.1",
