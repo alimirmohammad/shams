@@ -62,7 +62,6 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 
 const { data, error, isError, isLoading } = useQuery({
@@ -73,7 +72,7 @@ const { data, error, isError, isLoading } = useQuery({
 const reports = computed(() => data.value ?? []);
 
 const { data: me } = useMe();
-const isAdmin = computed(() => me.value?.role === Role.ADMIN);
+const isAdmin = computed(() => me.value?.role === 'ADMIN');
 
 export type SelectedReport = (typeof reports)['value'][number] | null;
 type Modal = 'edit-report' | 'delete-report' | 'none';

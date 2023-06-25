@@ -85,7 +85,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { Bill } from '~/components/EditBill.vue';
 import { BillWithId } from './loan.vue';
 import { Filters } from '~/components/FilterFields.vue';
-import { Role } from '@prisma/client';
 
 type Modal = 'edit-bill' | 'delete-bill' | 'edit-filters' | 'none';
 
@@ -102,7 +101,7 @@ const filters = reactive<{
 });
 
 const { data: me } = useMe();
-const isAdmin = computed(() => me.value?.role === Role.ADMIN);
+const isAdmin = computed(() => me.value?.role === 'ADMIN');
 
 const searchParams = computed(() => {
   const result = new URLSearchParams();

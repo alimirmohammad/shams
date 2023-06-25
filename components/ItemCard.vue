@@ -29,8 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client';
-
 type Props = {
   date?: string;
   description?: string | null;
@@ -49,7 +47,7 @@ const props = defineProps<Props>();
 defineEmits<Emits>();
 
 const { data: me } = useMe();
-const isAdmin = computed(() => me.value?.role === Role.ADMIN);
+const isAdmin = computed(() => me.value?.role === 'ADMIN');
 
 const formattedPrice = computed(() =>
   props.price ? convertToPersianDigit(props.price) : ''

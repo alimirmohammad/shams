@@ -52,7 +52,6 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { Person } from '~/components/EditPerson.vue';
 
@@ -64,7 +63,7 @@ const tabs = computed(() => [
 ]);
 
 const { data: me } = useMe();
-const isAdmin = computed(() => me.value?.role === Role.ADMIN);
+const isAdmin = computed(() => me.value?.role === 'ADMIN');
 
 const {
   data,

@@ -43,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client';
 import { useMutation } from '@tanstack/vue-query';
 import { z } from 'zod';
 
@@ -69,7 +68,7 @@ const { mutate, error, isError, isLoading } = useMutation({
     }),
   onSuccess: res => {
     if (res.mustChangePassword) return navigateTo('/change-password');
-    if (res.role === Role.ADMIN) return navigateTo('/people');
+    if (res.role === 'ADMIN') return navigateTo('/people');
     navigateTo(`/${res.id}/share`);
   },
 });

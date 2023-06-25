@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client';
-
 const { data, isSuccess, isError, error } = useMe();
 
 watchEffect(async () => {
@@ -27,7 +25,7 @@ watchEffect(async () => {
   if (!isSuccess.value) return;
   if (!data.value) return navigateTo('/signin');
   if (data.value.mustChangePassword) return navigateTo('/change-password');
-  if (data.value.role === Role.ADMIN) return navigateTo('/people');
+  if (data.value.role === 'ADMIN') return navigateTo('/people');
   navigateTo(`/${data.value.id}/share`);
 });
 </script>
