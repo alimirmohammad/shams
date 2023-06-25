@@ -18,14 +18,13 @@ export const userSelect = Prisma.validator<Prisma.UserArgs>()({
 export type UserBaseData = Prisma.UserGetPayload<typeof userSelect>;
 
 export default defineEventHandler(async event => {
+  const config = useRuntimeConfig();
+
   let user: UserBaseData | null = null;
   const token = getCookie(event, 'token');
   if (token) {
     try {
-      const { userId } = jwt.verify(
-        token,
-        process.env.JWT_SECRET!
-      ) as JwtPayload;
+      const { userId } = jwt.verify(token, config.jwtSecret) as JwtPayload;
 
       user = await prisma.user.findUnique({
         where: { id: userId },

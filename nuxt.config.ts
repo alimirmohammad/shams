@@ -10,6 +10,9 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
+  runtimeConfig: {
+    jwtSecret: '',
+  },
   pwa: {
     registerType: 'autoUpdate',
     manifest: {

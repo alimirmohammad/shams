@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
+  const config = useRuntimeConfig();
+
   const { phoneNumber, password } = await readBody(event);
 
   if (!phoneNumber || !password)
@@ -27,7 +29,7 @@ export default defineEventHandler(async event => {
       message: 'رمز عبور نادرست است.',
     });
 
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+  const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
     expiresIn: '1h',
   });
 
