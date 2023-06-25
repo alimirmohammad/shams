@@ -1,9 +1,9 @@
-import { Prisma } from '@prisma/client';
+import { Role } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
 import { prisma } from '~/server/utils/prisma';
 
-export const userSelect = Prisma.validator<Prisma.UserArgs>()({
+export const userSelect = {
   select: {
     id: true,
     firstName: true,
@@ -13,9 +13,17 @@ export const userSelect = Prisma.validator<Prisma.UserArgs>()({
     role: true,
     mustChangePassword: true,
   },
-});
+};
 
-export type UserBaseData = Prisma.UserGetPayload<typeof userSelect>;
+export type UserBaseData = {
+  id: number;
+  role: Role;
+  mustChangePassword: boolean;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  numOfShares: number;
+};
 
 export default defineEventHandler(async event => {
   const config = useRuntimeConfig();
