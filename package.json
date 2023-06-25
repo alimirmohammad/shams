@@ -18,7 +18,8 @@
     "nuxt": "^3.3.1",
     "prisma": "^4.14.1",
     "sass": "^1.62.1",
-    "tailwindcss-flip": "^1.0.0"
+    "tailwindcss-flip": "^1.0.0",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@alireza-ab/vue3-persian-datepicker": "^1.0.2",
