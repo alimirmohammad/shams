@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
       loans: {
         take: 1,
         orderBy: {
-          createdAt: 'desc',
+          date: 'desc',
         },
         select: {
           amount: true,

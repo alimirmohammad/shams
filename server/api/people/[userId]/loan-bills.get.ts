@@ -29,7 +29,7 @@ export default defineEventHandler(async event => {
       loans: {
         take: 1,
         orderBy: {
-          createdAt: 'desc',
+          date: 'desc',
         },
         select: {
           id: true,
@@ -69,7 +69,7 @@ export default defineEventHandler(async event => {
   const loans = await prisma.loan.findMany({
     where: { userId: +userId },
     take: 1,
-    orderBy: { createdAt: 'desc' },
+    orderBy: { date: 'desc' },
     select: {
       amount: true,
       bills: {

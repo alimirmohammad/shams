@@ -19,7 +19,8 @@ export default defineNuxtPlugin(nuxt => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 5000,
+        staleTime: Infinity,
+        cacheTime: Infinity,
         retry(failureCount, error) {
           const statusCode = (error as NuxtError).statusCode;
           if (statusCode >= 400 && statusCode < 500) return false;

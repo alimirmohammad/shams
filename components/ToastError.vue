@@ -1,5 +1,5 @@
 <template>
-  <Toast v-if="isToastVisible" toast-class="alert-error">
+  <Toast v-if="isToastVisible" class="z-[1000]" toast-class="alert-error">
     <span class="text-white">{{ errorText }}</span>
   </Toast>
 </template>
