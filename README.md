@@ -1,42 +1,27 @@
-# Nuxt 3 Minimal Starter
+# Shams Family Funds
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Welcome to Shams Family Funds, an application designed for managing family funds. With this app, you can easily keep track of family members and their shares. You can record payments made toward share bills and loans given to members and when they pay them back. In addition, the app provides account balances and calculates any debts owed.
 
-## Setup
+## Authorization
 
-Make sure to install the dependencies:
+There are two user roles: `USER` and `ADMIN`. `ADMIN` users can add new data and access the complete list of members, while `USER` users can only view their own share, balance, debt, and loans. They cannot modify any data.
+
+## Tech Stack
+
+This app was developed using `Nuxt 3`, `TypeScript`, `TailwindCSS`, and `DaisyUI`. Form validation is provided by `Vee-Validate` and `Zod`, while data fetching and caching is handled by `Vue-Query`. The app uses a `Postgresql` database and `Prisma` to access it. Authentication is implemented using `JWT`, with cookie-based storage, and an authorization system restricts specific tasks to `ADMIN` users.
+
+The app is also a `PWA`, which means it can be installed on mobile devices and accessed from the home screen. It uses the `Vite-PWA` plugin under the hood.
+
+## Run the Application
+
+To run the app, you must provide two environment variables: `DATABASE_URL` and `NUXT_JWT_SECRET`. You can store these variables in a `.env` file in a local environment.
+
+Then simply run the following commands to get started:
 
 ```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
 pnpm install
 ```
 
-## Development Server
-
-Start the development server on http://localhost:3000
-
 ```bash
-npm run dev
+pnpm dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
