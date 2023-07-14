@@ -59,7 +59,7 @@ const route = useRoute();
 const userId = computed(() => route.params.userId);
 const tabs = computed(() => [
   { label: 'سهام', to: `/${userId.value}/share` },
-  { label: 'وام', to: `/${userId.value}/loan` },
+  { label: 'قسط', to: `/${userId.value}/loan` },
 ]);
 
 const { data: me } = useMe();
