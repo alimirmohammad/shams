@@ -4,8 +4,10 @@
     :class="{ 'bg-primary-600 text-white': Boolean(debt) }"
   >
     <span>{{ name }} ({{ numOfSharesPersian }})</span>
-    <span v-if="debt">{{ debtPersian }}</span>
-    <ArrowLeftIcon :white="Boolean(debt)" />
+    <div class="flex items-center gap-8">
+      <span v-if="debt">{{ debtPersian }}</span>
+      <ArrowLeftIcon :white="Boolean(debt)" />
+    </div>
   </div>
 </template>
 

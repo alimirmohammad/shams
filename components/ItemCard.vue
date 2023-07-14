@@ -22,7 +22,10 @@
     <span v-if="username" class="block body-2 text-gray-900 mt-2 text-start">
       {{ username }}
     </span>
-    <p v-if="description" class="body-3 text-gray-900 mt-4 text-start truncate">
+    <p
+      v-if="description"
+      class="font-fa body-3 text-gray-900 mt-4 text-start truncate"
+    >
       {{ description }}
     </p>
   </div>
