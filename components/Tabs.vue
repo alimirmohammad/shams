@@ -3,9 +3,10 @@
     <div
       v-for="tab in tabs"
       :key="tab.to"
-      class="tab text-primary-900 px-11 headline-3"
+      class="tab text-gray-700 px-11 headline-3"
       :class="{
-        'bg-white border-2 border-primary-500': activeTab === tab.to,
+        'bg-white border-2 border-primary-500 text-gray-900':
+          activeTab === tab.to,
       }"
     >
       <NuxtLink :to="tab.to">
