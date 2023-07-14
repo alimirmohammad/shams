@@ -15,12 +15,14 @@
     </div>
     <main v-else class="bg-white text-center overflow-auto p-4">
       <ul class="flex flex-col gap-4">
-        <li v-for="loan in loans" :key="loan.id">
+        <li v-for="(loan, index) in loans" :key="loan.id">
           <ItemCard
             :price="loan.amount"
             :date="loan.date"
             :description="loan.description"
             :username="`${loan.user.firstName} ${loan.user.lastName}`"
+            :expanded="index === activeIndex"
+            @click="activeIndex = index"
             @delete="openDeleteModal(loan)"
             @edit="openEditModal(loan)"
           />
@@ -62,6 +64,7 @@ export type SelectedLoan = (typeof loans)['value'][number] | null;
 type Modal = 'edit-loan' | 'delete-loan' | 'none';
 const modal = ref<Modal>('none');
 const selectedLoan = ref<SelectedLoan>(null);
+const activeIndex = ref<number | null>(null);
 
 function openDeleteModal(loan: SelectedLoan) {
   selectedLoan.value = loan;

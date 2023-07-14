@@ -24,7 +24,8 @@
     </span>
     <p
       v-if="description"
-      class="font-fa body-3 text-gray-900 mt-4 text-start truncate"
+      class="font-fa body-3 text-gray-900 mt-4 text-start"
+      :class="{ truncate: !expanded }"
     >
       {{ description }}
     </p>
@@ -39,6 +40,7 @@ type Props = {
   title?: string;
   username?: string;
   to?: string;
+  expanded?: boolean;
 };
 
 type Emits = {

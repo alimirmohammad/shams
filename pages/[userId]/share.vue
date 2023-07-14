@@ -13,11 +13,13 @@
       <LoadingRipple />
     </div>
     <ul v-else class="flex flex-col gap-4">
-      <li v-for="bill in bills" :key="bill.id">
+      <li v-for="(bill, index) in bills" :key="bill.id">
         <ItemCard
           :price="bill.amount"
           :date="bill.date"
           :description="bill.description"
+          :expanded="index === activeIndex"
+          @click="activeIndex = index"
           @edit="openEditModal(bill)"
           @delete="openDeleteModal(bill)"
         />
@@ -90,6 +92,7 @@ type Modal = 'edit-bill' | 'delete-bill' | 'edit-filters' | 'none';
 
 const route = useRoute();
 const modal = ref<Modal>('none');
+const activeIndex = ref<number | null>(null);
 const selectedBill = ref<BillWithId | null>(null);
 const userId = computed(() => route.params.userId);
 const filters = reactive<{
