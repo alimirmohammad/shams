@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMutation } from '@tanstack/vue-query';
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -59,6 +59,7 @@ const schema = z.object({
 
 const loginSchema = toTypedSchema(schema);
 type Payload = z.infer<typeof schema>;
+const queryClient = useQueryClient();
 
 const { mutate, error, isError, isLoading } = useMutation({
   mutationFn: (body: Payload) =>
@@ -67,6 +68,7 @@ const { mutate, error, isError, isLoading } = useMutation({
       body,
     }),
   onSuccess: res => {
+    queryClient.setQueryData(['me'], res);
     if (res.mustChangePassword) return navigateTo('/change-password');
     if (res.role === 'ADMIN') return navigateTo('/people');
     navigateTo(`/${res.id}/share`);

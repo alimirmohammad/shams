@@ -20,8 +20,7 @@
 <script setup lang="ts">
 const { data, isSuccess, isError, error } = useMe();
 
-watchEffect(async () => {
-  await delay(2);
+watchEffect(() => {
   if (!isSuccess.value) return;
   if (!data.value) return navigateTo('/signin');
   if (data.value.mustChangePassword) return navigateTo('/change-password');
