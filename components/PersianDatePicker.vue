@@ -17,6 +17,7 @@
       :modelValue="initialValue.split('T').at(0)"
       @close="handleChange(value)"
       @clear="handleChange(value)"
+      inputmode="none"
       :styles="{ 'primary-color': '#6972F1' }"
     />
     <div v-if="errorMessage" class="mt-2">
