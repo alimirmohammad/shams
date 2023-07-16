@@ -30,11 +30,14 @@
       id="password"
       label="رمز عبور"
       dir="ltr"
-      type="password"
+      :type="showPassword ? 'text' : 'password'"
       containerClass="mb-12"
     >
       <template #startAdornment>
-        <EyeIcon />
+        <IconButton @click="showPassword = !showPassword" type="button">
+          <EyeSlashIcon v-if="showPassword" />
+          <EyeIcon v-else />
+        </IconButton>
       </template>
     </Input>
     <Button type="submit" block :loading="isLoading"> ورود </Button>
@@ -60,6 +63,7 @@ const schema = z.object({
 const loginSchema = toTypedSchema(schema);
 type Payload = z.infer<typeof schema>;
 const queryClient = useQueryClient();
+const showPassword = ref(false);
 
 const { mutate, error, isError, isLoading } = useMutation({
   mutationFn: (body: Payload) =>
