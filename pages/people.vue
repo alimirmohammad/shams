@@ -23,9 +23,15 @@
           no-validate
           id="query"
           label="جستجو"
-          type="text"
+          type="search"
+          inputClass="px-10"
           containerClass="mb-6"
-        />
+          placeholder="نام سهام‌دار مورد نظر را جستجو کنید"
+        >
+          <template #startAdornment>
+            <SearchIcon />
+          </template>
+        </Input>
         <ul class="flex flex-col gap-4">
           <li v-for="person in people">
             <NuxtLink :to="`/${person.id}/share`">
