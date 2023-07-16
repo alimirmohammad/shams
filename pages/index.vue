@@ -8,8 +8,8 @@
       <div class="relative">
         <Suitcase class="mx-auto" />
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2">
-          <h4 class="mb-4 headline-2">صندوق قرض الحسنه</h4>
-          <h4 class="label-2">تأسیس ۱۳۸۲</h4>
+          <h4 class="mb-4 headline-2">صندوق خانوادگی</h4>
+          <h4 class="label-2">تأسیس ۱۳۷۷/۱/۵</h4>
         </div>
       </div>
     </div>
@@ -19,9 +19,15 @@
 
 <script setup lang="ts">
 const { data, isSuccess, isError, error } = useMe();
+const minTimeElapsed = ref(false);
+
+onMounted(async () => {
+  await delay(2);
+  minTimeElapsed.value = true;
+});
 
 watchEffect(() => {
-  if (!isSuccess.value) return;
+  if (!isSuccess.value || !minTimeElapsed.value) return;
   if (!data.value) return navigateTo('/signin');
   if (data.value.mustChangePassword) return navigateTo('/change-password');
   if (data.value.role === 'ADMIN') return navigateTo('/people');
