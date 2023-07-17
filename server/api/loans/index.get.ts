@@ -43,5 +43,7 @@ export default defineEventHandler(async event => {
     },
   }));
 
-  return lastLoans.filter(loan => loan.debt > 0);
+  return lastLoans
+    .filter((loan) => loan.debt > 0)
+    .sort((a, b) => (a.date! < b.date! ? 1 : -1));
 });
