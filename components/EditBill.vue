@@ -5,6 +5,7 @@
       label="تاریخ"
       :initial-value="bill?.date"
       class="mb-6"
+      modal
     />
     <Input
       id="amount"

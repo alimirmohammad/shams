@@ -18,6 +18,7 @@
       @close="handleChange(value)"
       @clear="handleChange(value)"
       inputmode="none"
+      :modal="modal"
       :styles="{ 'primary-color': '#6972F1' }"
     />
     <div v-if="errorMessage" class="mt-2">
@@ -35,6 +36,7 @@ type Props = {
   initialValue?: string;
   inputClass?: string;
   containerClass?: string;
+  modal?: boolean;
 };
 
 type Emits = {

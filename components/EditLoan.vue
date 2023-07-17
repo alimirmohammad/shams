@@ -13,6 +13,7 @@
       label="تاریخ"
       class="mb-4"
       :initialValue="loan?.date"
+      modal
     />
     <Input
       id="amount"

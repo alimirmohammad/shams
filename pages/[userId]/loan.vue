@@ -62,8 +62,8 @@
       </BottomSheet>
       <BottomNavigationRestricted v-else />
       <BottomSheet
-        :open="modal === 'edit-filters'"
         overflow
+        :open="modal === 'edit-filters'"
         @close="modal = 'none'"
       >
         <FilterFields
