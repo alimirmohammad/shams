@@ -2,20 +2,17 @@
   <div class="h-full w-full">
     <slot />
     <ClientOnly>
-      <Toast v-if="$pwa?.offlineReady || $pwa?.needRefresh">
+      <Toast v-if="$pwa?.needRefresh">
         <div class="label-1">
-          <span v-if="$pwa.offlineReady"> برنامه آماده استفاده است </span>
-          <span v-else> برنامه نیاز به بروزرسانی دارد </span>
+          <span> برنامه نیاز به بروزرسانی دارد </span>
         </div>
         <div class="flex flex-row items-center gap-4">
-          <Button
-            v-if="$pwa.needRefresh"
-            sm
-            @click="$pwa.updateServiceWorker()"
-          >
+          <Button sm @click="$pwa.updateServiceWorker()" class="flex-1">
             بروز رسانی
           </Button>
-          <Button sm outline @click="$pwa.cancelPrompt()"> بستن </Button>
+          <Button sm outline @click="$pwa.cancelPrompt()" class="flex-1">
+            بستن
+          </Button>
         </div>
       </Toast>
       <Toast

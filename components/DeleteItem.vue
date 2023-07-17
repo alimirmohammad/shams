@@ -4,10 +4,12 @@
       {{ title }}
     </h3>
     <div class="flex flex-row justify-center items-center gap-4">
-      <Button sm @click="$emit('confirm')" :loading="loading">
+      <Button sm @click="$emit('confirm')" :loading="loading" class="flex-1">
         {{ okLabel }}
       </Button>
-      <Button sm outline @click="$emit('close')"> {{ cancelLabel }} </Button>
+      <Button sm outline @click="$emit('close')" class="flex-1">
+        {{ cancelLabel }}
+      </Button>
     </div>
   </div>
 </template>
