@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="px-4 py-3 border border-primary-500 rounded-xl shadow-md h-auto item-card"
-    :class="expanded ? 'max-h-64' : 'max-h-[84px]'"
-  >
+  <div class="px-4 py-3 border border-primary-500 rounded-xl shadow-md">
     <div class="flex flex-row items-center justify-between">
       <div v-if="price" class="flex flex-row items-center gap-2">
         <span class="body-2 text-gray-900">{{ formattedPrice }}</span>
@@ -64,9 +61,3 @@ const jalali = computed(() =>
   props.date ? convertToJalaliString(props.date) : ''
 );
 </script>
-
-<style scoped>
-.item-card {
-  transition: max-height 2s ease-out;
-}
-</style>
