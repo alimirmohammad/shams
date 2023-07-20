@@ -25,6 +25,7 @@
             :description="loan.description"
             :username="`${loan.user.firstName} ${loan.user.lastName}`"
             :expanded="index === activeIndex"
+            :link="{ text: 'مشاهده اقساط', url: `/${loan.user.id}/loan` }"
             @click="activeIndex = index"
             @delete="openDeleteModal(loan)"
             @edit="openEditModal(loan)"
