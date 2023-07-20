@@ -12,19 +12,22 @@
     >
       <LoadingRipple />
     </div>
-    <ul v-else class="flex flex-col gap-4">
-      <li v-for="(bill, index) in bills" :key="bill.id">
-        <ItemCard
-          :price="bill.amount"
-          :date="bill.date"
-          :description="bill.description"
-          :expanded="index === activeIndex"
-          @click="activeIndex = index"
-          @edit="openEditModal(bill)"
-          @delete="openDeleteModal(bill)"
-        />
-      </li>
-    </ul>
+    <template v-else>
+      <ul v-if="bills.length > 0" class="flex flex-col gap-4">
+        <li v-for="(bill, index) in bills" :key="bill.id">
+          <ItemCard
+            :price="bill.amount"
+            :date="bill.date"
+            :description="bill.description"
+            :expanded="index === activeIndex"
+            @click="activeIndex = index"
+            @edit="openEditModal(bill)"
+            @delete="openDeleteModal(bill)"
+          />
+        </li>
+      </ul>
+      <EmptyState v-else />
+    </template>
     <FixedBottom v-if="isAdmin">
       <Button block @click="modal = 'edit-bill'">
         افزودن فیش

@@ -17,7 +17,7 @@
       <div class="flex flex-row items-center justify-end mb-4">
         <PriceSummary title="جمع بدهی اعضا" :price="totalDebt" />
       </div>
-      <ul class="flex flex-col gap-4">
+      <ul v-if="loans.length > 0" class="flex flex-col gap-4">
         <li v-for="(loan, index) in loans" :key="loan.id">
           <ItemCard
             :price="loan.amount"
@@ -32,6 +32,7 @@
           />
         </li>
       </ul>
+      <EmptyState v-else />
     </main>
     <BottomNavigation />
     <BottomSheet :open="modal === 'edit-loan'" @close="modal = 'none'">

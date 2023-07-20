@@ -32,7 +32,7 @@
             <SearchIcon />
           </template>
         </Input>
-        <ul class="flex flex-col gap-4">
+        <ul v-if="people.length > 0" class="flex flex-col gap-4">
           <li v-for="person in people">
             <NuxtLink :to="`/${person.id}/share`">
               <PersonCard
@@ -43,6 +43,7 @@
             </NuxtLink>
           </li>
         </ul>
+        <EmptyState v-else />
       </template>
     </main>
     <BottomNavigation />

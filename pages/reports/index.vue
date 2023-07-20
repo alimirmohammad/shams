@@ -11,7 +11,7 @@
       v-else
       class="bg-white text-center overflow-auto shadow-xl p-4 pt-10 pb-24"
     >
-      <ul class="flex flex-col gap-4">
+      <ul v-if="reports.length > 0" class="flex flex-col gap-4">
         <li v-for="report in reports" :key="report.id">
           <ItemCard
             :title="report.title"
@@ -22,6 +22,7 @@
           />
         </li>
       </ul>
+      <EmptyState v-else />
       <FixedBottom v-if="isAdmin" has-bottom-sheet>
         <Button block @click="modal = 'edit-report'">
           ثبت گزارش
