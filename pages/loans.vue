@@ -14,6 +14,9 @@
       <LoadingRipple />
     </div>
     <main v-else class="bg-white text-center overflow-auto p-4">
+      <div class="flex flex-row items-center justify-end mb-4">
+        <PriceSummary title="جمع بدهی اعضا" :price="totalDebt" />
+      </div>
       <ul class="flex flex-col gap-4">
         <li v-for="(loan, index) in loans" :key="loan.id">
           <ItemCard
@@ -59,6 +62,9 @@ const { data, error, isError, isLoading } = useQuery({
 });
 
 const loans = computed(() => data.value ?? []);
+const totalDebt = computed(() =>
+  loans.value.reduce((acc, cur) => acc + cur.debt, 0)
+);
 
 export type SelectedLoan = (typeof loans)['value'][number] | null;
 type Modal = 'edit-loan' | 'delete-loan' | 'none';
