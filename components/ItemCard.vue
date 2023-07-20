@@ -6,8 +6,7 @@
         <span class="body-3 text-gray-500">ریال</span>
       </div>
       <template v-if="title">
-        <NuxtLink v-if="to" :to="to">{{ title }}</NuxtLink>
-        <span v-else>{{ title }}</span>
+        <span>{{ title }}</span>
       </template>
       <div class="flex flex-row items-center gap-5">
         <span class="body-2 text-gray-900">{{ jalali }}</span>
@@ -19,9 +18,21 @@
         </button>
       </div>
     </div>
-    <span v-if="username" class="block body-2 text-gray-900 mt-2 text-start">
-      {{ username }}
-    </span>
+    <div
+      v-if="username || link"
+      class="flex flex-row items-center justify-between mt-2 body-2"
+    >
+      <span class="block text-gray-900 text-start justify-self-start">
+        {{ username }}
+      </span>
+      <NuxtLink
+        v-if="link"
+        :to="link.url"
+        class="block text-primary-500 justify-self-end"
+      >
+        {{ link.text }}
+      </NuxtLink>
+    </div>
     <p
       v-if="description"
       class="font-fa body-3 text-gray-900 mt-4 text-start"
@@ -39,8 +50,8 @@ type Props = {
   price?: number;
   title?: string;
   username?: string;
-  to?: string;
   expanded?: boolean;
+  link?: { text: string; url: string };
 };
 
 type Emits = {

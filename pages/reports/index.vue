@@ -16,7 +16,7 @@
           <ItemCard
             :title="report.title"
             :description="report.description"
-            :to="`/reports/${report.id}`"
+            :link="{ text: 'مشاهده گزارش', url: `/reports/${report.id}` }"
             @delete="openDeleteModal(report)"
             @edit="openEditModal(report)"
           />
