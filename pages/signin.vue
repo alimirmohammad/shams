@@ -7,7 +7,7 @@
     <Logo class="mx-auto" />
     <h1 class="my-4 text-primary-500 font-bold text-3xl">شمس</h1>
     <h4 class="mb-3 text-primary-500 headline-3">صندوق خانوادگی</h4>
-    <h4 class="mb-12 text-primary-500 label-3">تأسیس ۱۳۸۲</h4>
+    <h4 class="mb-12 text-primary-500 label-3">تأسیس ۱۳۷۷</h4>
     <Input
       id="phoneNumber"
       label="شماره موبایل"
