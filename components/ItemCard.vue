@@ -22,14 +22,10 @@
       v-if="username || link"
       class="flex flex-row items-center justify-between mt-2 body-2"
     >
-      <span class="block text-gray-900 text-start justify-self-start">
+      <span class="block text-gray-900 text-start">
         {{ username }}
       </span>
-      <NuxtLink
-        v-if="link"
-        :to="link.url"
-        class="block text-primary-500 justify-self-end"
-      >
+      <NuxtLink v-if="link" :to="link.url" class="block text-primary-500">
         {{ link.text }}
       </NuxtLink>
     </div>
