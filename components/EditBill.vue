@@ -30,7 +30,9 @@
       containerClass="mb-10"
       :initialValue="bill?.description ?? ''"
     />
-    <Button block type="submit" :loading="loading"> ثبت فیش </Button>
+    <Button block type="submit" :loading="loading">
+      {{ buttonText }} فیش
+    </Button>
   </Form>
 </template>
 
@@ -81,4 +83,6 @@ const emit = defineEmits<Emits>();
 function onSubmit(values: unknown): void {
   emit('submit', values as Bill, props.bill?.id);
 }
+
+const buttonText = computed(() => (props.bill ? 'ویرایش' : 'افزودن'));
 </script>

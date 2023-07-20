@@ -38,7 +38,9 @@
       rows="3"
       containerClass="mb-6"
     />
-    <Button block type="submit" :loading="isLoading"> ثبت فیش </Button>
+    <Button block type="submit" :loading="isLoading">
+      {{ buttonText }} وام
+    </Button>
     <ToastError :error="error" :is-error="isError" />
   </Form>
 </template>
@@ -129,6 +131,7 @@ const currentLoanUser = computed(() =>
       ]
     : []
 );
+const buttonText = computed(() => (props.loan ? 'ویرایش' : 'افزودن'));
 
 const users = computed(
   () =>

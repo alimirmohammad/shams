@@ -16,7 +16,7 @@
       :initialValue="report?.description"
     />
     <Button block type="submit" :loading="isLoading">
-      ثبت گزارش
+      {{ buttonText }} گزارش
       <template #icon>
         <TickSquareIcon white />
       </template>
@@ -65,4 +65,6 @@ function onSubmit(values: unknown): void {
     onSuccess: () => emit('close'),
   });
 }
+
+const buttonText = computed(() => (props.report ? 'ویرایش' : 'افزودن'));
 </script>

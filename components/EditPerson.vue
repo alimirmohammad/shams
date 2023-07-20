@@ -45,7 +45,9 @@
       containerClass="mb-14"
       :initial-value="person?.numOfShares.toString()"
     />
-    <Button block type="submit" :loading="loading">ثبت سهام دار</Button>
+    <Button block type="submit" :loading="loading">
+      {{ buttonText }} سهام دار
+    </Button>
   </Form>
 </template>
 
@@ -84,10 +86,12 @@ type Emits = {
   (e: 'submit', person: Person): void;
 };
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 function onSubmit(values: unknown): void {
   emit('submit', values as Person);
 }
+
+const buttonText = computed(() => (props.person ? 'ویرایش' : 'افزودن'));
 </script>
