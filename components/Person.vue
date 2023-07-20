@@ -8,7 +8,7 @@
         <LoadingRipple />
       </div>
       <template v-if="isAdmin" #startAction>
-        <IconButton @click="navigateTo('/people')">
+        <IconButton @click="router.back">
           <ArrowRightIcon />
         </IconButton>
       </template>
@@ -56,6 +56,7 @@ import { useQuery, useQueryClient } from '@tanstack/vue-query';
 import { Person } from '~/components/EditPerson.vue';
 
 const route = useRoute();
+const router = useRouter();
 const userId = computed(() => route.params.userId);
 const tabs = computed(() => [
   { label: 'سهام', to: `/${userId.value}/share` },
