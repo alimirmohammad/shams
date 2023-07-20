@@ -7,6 +7,7 @@ import {
   QueryClient,
   hydrate,
   dehydrate,
+  QueryCache,
 } from '@tanstack/vue-query';
 // Nuxt 3 app aliases
 import { useState } from '#app';
@@ -17,6 +18,16 @@ export default defineNuxtPlugin(nuxt => {
 
   // Modify your Vue Query global settings here
   const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError(error) {
+        switch ((error as NuxtError).statusCode) {
+          case 401:
+            return navigateTo('/signin', { replace: true });
+          case 403:
+            return navigateTo('/reports', { replace: true });
+        }
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: Infinity,
