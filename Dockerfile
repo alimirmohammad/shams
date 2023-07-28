@@ -1,7 +1,7 @@
 FROM node:18-alpine3.17 AS build
 WORKDIR /app
-COPY package.json pnpm-lock.yaml .npmrc ./
 RUN npm install -g pnpm@8.6.2
+COPY package.json pnpm-lock.yaml .npmrc ./
 RUN pnpm install
 COPY . .
 RUN pnpm build

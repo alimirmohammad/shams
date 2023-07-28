@@ -12,9 +12,33 @@ This app was developed using `Nuxt 3`, `TypeScript`, `TailwindCSS`, and `DaisyUI
 
 The app is also a `PWA`, which means it can be installed on mobile devices and accessed from the home screen. It uses the `Vite-PWA` plugin under the hood.
 
+You can build your container version of this app using `Docker`.
+
+## Container
+
+Using the `Dockerfile` in this repo, you can build and run your container version of the app.
+
+To build an image, run the following command inside the root of the project:
+
+```bash
+docker build -t YOUR_TAG_NAME .
+```
+
+## CI/CD
+
+This app uses `Github Actions` as its CI/CD. So whenever new code is pushed to the `main` branch, the application is rebuilt and re-deployed.
+
 ## Run the Application
 
 To run the app, you must provide two environment variables: `DATABASE_URL` and `NUXT_JWT_SECRET`. You can store these variables in a `.env` file in a local environment.
+
+### Using Node.js Locally
+
+If you don't have `pnpm` installed you must first install it globally using `npm`:
+
+```bash
+npm install -g pnpm@8.6.2
+```
 
 Then simply run the following commands to get started:
 
@@ -24,4 +48,12 @@ pnpm install
 
 ```bash
 pnpm dev
+```
+
+### Using Docker
+
+After building a `Docker` image, you can run it with `Docker`:
+
+```bash
+docker run --rm -it -p 3000:3000/tcp --env-file YOUR_ENV_FILE YOUR_TAG_NAME
 ```
