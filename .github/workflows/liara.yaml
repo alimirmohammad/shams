@@ -11,10 +11,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '18'
       - name: update-liara
         env:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
         run: |
           npm i -g @liara/cli@4
-          liara deploy --app="shams" --api-token="$LIARA_TOKEN" --detach --port=3000
+          liara deploy --app="shams" --api-token="$LIARA_TOKEN" --detach --port=3000 --platform=docker
