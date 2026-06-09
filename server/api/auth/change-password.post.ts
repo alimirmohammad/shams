@@ -1,4 +1,4 @@
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { UserBaseData } from '~/server/middleware/auth';
 
 export default defineEventHandler(async event => {

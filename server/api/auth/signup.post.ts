@@ -1,4 +1,4 @@
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { prisma } from '~/server/utils/prisma';
 import { userSelect } from '~/server/middleware/auth';
 import protectAdminRoute from '~/server/utils/protectAdminRoute';
@@ -7,9 +7,8 @@ import protectRoute from '~/server/utils/protectRoute';
 export default defineEventHandler(async event => {
   protectRoute(event);
   protectAdminRoute(event);
-  const { phoneNumber, firstName, lastName, numOfShares } = await readBody(
-    event
-  );
+  const { phoneNumber, firstName, lastName, numOfShares } =
+    await readBody(event);
 
   if (!phoneNumber || !firstName || !lastName || !numOfShares)
     throw createError({
