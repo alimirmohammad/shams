@@ -15,14 +15,15 @@
     "@vite-pwa/nuxt": "^1.1.1",
     "daisyui": "^2.51.6",
     "nuxt": "^3.21.8",
-    "prisma": "^4.14.1",
+    "prisma": "^7.8.0",
     "sass": "^1.100.0",
     "tailwindcss-flip": "^1.0.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
     "@alireza-ab/vue3-persian-datepicker": "^1.0.2",
-    "@prisma/client": "4.14.1",
+    "@prisma/client": "7.8.0",
+    "@prisma/extension-accelerate": "^3.0.1",
     "@tanstack/vue-query": "^4.29.13",
     "@vee-validate/nuxt": "^4.9.3",
     "@vee-validate/zod": "^4.9.3",
