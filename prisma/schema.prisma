@@ -2,10 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider     = "prisma-client"
-  runtime      = "cloudflare"
-  moduleFormat = "esm"
-  output       = "../server/generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../server/generated/prisma"
 }
 
 datasource db {
