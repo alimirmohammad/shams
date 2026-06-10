@@ -6,6 +6,10 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
     },
+    bundledStorage: [],
+    externals: {
+      inline: ['./server/generated/prisma'],
+    },
   },
   ssr: false,
   css: ['@/assets/main.css'],
