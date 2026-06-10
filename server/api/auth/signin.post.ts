@@ -1,5 +1,5 @@
 import { compare } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { SignJWT } from 'jose';
 
 import { prisma } from '~/server/utils/prisma';
 
@@ -29,9 +29,11 @@ export default defineEventHandler(async event => {
       message: 'رمز عبور نادرست است.',
     });
 
-  const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
-    expiresIn: '1h',
-  });
+  const secret = new TextEncoder().encode(config.jwtSecret);
+  const token = await new SignJWT({ userId: user.id })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('1h')
+    .sign(secret);
 
   setCookie(event, 'token', token, { maxAge: 60 * 60 });
 

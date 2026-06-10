@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client';
-import jwt from 'jsonwebtoken';
-import { JwtPayload } from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
+
 import { prisma } from '~/server/utils/prisma';
 
 export const userSelect = {
@@ -32,7 +32,9 @@ export default defineEventHandler(async event => {
   const token = getCookie(event, 'token');
   if (token) {
     try {
-      const { userId } = jwt.verify(token, config.jwtSecret) as JwtPayload;
+      const secret = new TextEncoder().encode(config.jwtSecret);
+      const { payload } = await jwtVerify(token, secret);
+      const { userId } = payload as { userId: number };
 
       user = await prisma.user.findUnique({
         where: { id: userId },
