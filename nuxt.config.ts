@@ -1,7 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2024-09-19',
   nitro: {
     preset: 'cloudflare_module',
+    cloudflare: {
+      deployConfig: true,
+    },
   },
   ssr: false,
   css: ['@/assets/main.css'],
