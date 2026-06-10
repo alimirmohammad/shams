@@ -5,7 +5,7 @@ generator client {
   provider     = "prisma-client"
   runtime      = "cloudflare"
   moduleFormat = "esm"
-  output       = "../generated/prisma"
+  output       = "../server/generated/prisma"
 }
 
 datasource db {
