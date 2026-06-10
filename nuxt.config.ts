@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     },
     bundledStorage: [],
     externals: {
-      inline: ['./server/generated/prisma'],
+      inline: [/generated\/prisma/],
     },
   },
   ssr: false,
