@@ -1,6 +1,6 @@
 import { H3Event } from 'h3';
 import { UserBaseData } from '../middleware/auth';
-import { Role } from '@prisma/client';
+import { Role } from '~/server/generated/prisma/enums';
 
 export default (event: H3Event, userId: number) => {
   const user: UserBaseData = event.context.user;

@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role } from '~/server/generated/prisma/enums';
 import { jwtVerify } from 'jose';
 
 import { prisma } from '~/server/utils/prisma';
