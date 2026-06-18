@@ -40,7 +40,7 @@ export default defineEventHandler(async event => {
   const loanOptions = await prisma.loan.findMany({
     where: { userId: +userId },
     orderBy: { date: 'desc' },
-    select: { id: true, date: true },
+    select: { id: true, date: true, amount: true },
   });
 
   const activeLoanId =

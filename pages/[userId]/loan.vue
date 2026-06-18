@@ -23,6 +23,10 @@
       <LoadingRipple />
     </div>
     <template v-else>
+      <div v-if="currentLoan" class="flex justify-between items-center px-1 pb-2">
+        <span class="body-3 text-gray-500">تاریخ وام: {{ convertToJalaliString(currentLoan.date) }}</span>
+        <PriceSummary title="مبلغ وام" :price="currentLoan.amount" />
+      </div>
       <ul v-if="bills.length > 0" class="flex flex-col gap-4">
         <li v-for="(bill, index) in bills" :key="bill.id">
           <ItemCard
@@ -140,6 +144,9 @@ const bills = computed(() => data.value?.bills ?? []);
 const debt = computed(() => data.value?.debt ?? 0);
 const loans = computed(() => data.value?.loans ?? []);
 const activeLoanId = computed(() => data.value?.activeLoanId);
+const currentLoan = computed(() =>
+  loans.value.find(l => l.id === (selectedLoanId.value ?? activeLoanId.value)),
+);
 
 function openDeleteModal(bill: BillWithId) {
   selectedBill.value = bill;
