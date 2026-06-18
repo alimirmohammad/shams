@@ -19,7 +19,7 @@
       @clear="handleChange(value)"
       inputmode="none"
       :modal="modal"
-      :styles="{ 'primary-color': '#6972F1' }"
+      :styles="datePickerStyles"
     />
     <div v-if="errorMessage" class="mt-2">
       <span v-if="errorMessage" class="block body-3 text-red-500 text-start">
@@ -47,6 +47,9 @@ const props = withDefaults(defineProps<Props>(), {
   initialValue: '',
 });
 defineEmits<Emits>();
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const datePickerStyles: any = { 'primary-color': '#6972F1' };
 
 const { value, errorMessage, handleChange } = useValidation(
   props.id,

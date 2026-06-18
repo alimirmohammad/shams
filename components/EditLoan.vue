@@ -22,7 +22,7 @@
       dir="ltr"
       inputClass="pr-14"
       containerClass="mb-4"
-      :initial-value="loan?.amount.toString()"
+      :initial-value="loan?.amount?.toString()"
       :formatter="commafy"
       :transformer="transformPrice"
     >
@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
-import { SelectedLoan } from '~/pages/loans.vue';
+import type { SelectedLoan } from '~/pages/loans.vue';
 import ToastError from './ToastError.vue';
 
 type Props = {

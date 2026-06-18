@@ -6,7 +6,10 @@ import { prisma } from '~/server/utils/prisma';
 export default defineEventHandler(async event => {
   const config = useRuntimeConfig();
 
-  const { phoneNumber, password } = await readBody(event);
+  const { phoneNumber, password } = await readBody<{
+    phoneNumber: string;
+    password: string;
+  }>(event);
 
   if (!phoneNumber || !password)
     throw createError({

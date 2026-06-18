@@ -11,7 +11,7 @@ import {
 } from '@tanstack/vue-query';
 // Nuxt 3 app aliases
 import { useState } from '#app';
-import { NuxtError } from 'nuxt/app';
+import type { NuxtError } from 'nuxt/app';
 
 export default defineNuxtPlugin(nuxt => {
   const vueQueryState = useState<DehydratedState | null>('vue-query');
@@ -20,7 +20,7 @@ export default defineNuxtPlugin(nuxt => {
   const queryClient = new QueryClient({
     queryCache: new QueryCache({
       onError(error) {
-        switch ((error as NuxtError).statusCode) {
+        switch ((error as NuxtError).status) {
           case 401:
             return navigateTo('/signin', { replace: true });
           case 403:
@@ -33,8 +33,9 @@ export default defineNuxtPlugin(nuxt => {
         staleTime: Infinity,
         cacheTime: Infinity,
         retry(failureCount, error) {
-          const statusCode = (error as NuxtError).statusCode;
-          if (statusCode >= 400 && statusCode < 500) return false;
+          const statusCode = (error as NuxtError).status;
+          if (statusCode != null && statusCode >= 400 && statusCode < 500)
+            return false;
           return failureCount <= 3;
         },
       },
@@ -44,13 +45,13 @@ export default defineNuxtPlugin(nuxt => {
 
   nuxt.vueApp.use(VueQueryPlugin, options);
 
-  if (process.server) {
+  if (import.meta.server) {
     nuxt.hooks.hook('app:rendered', () => {
       vueQueryState.value = dehydrate(queryClient);
     });
   }
 
-  if (process.client) {
+  if (import.meta.client) {
     nuxt.hooks.hook('app:created', () => {
       hydrate(queryClient, vueQueryState.value);
     });

@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { Person } from '~/components/EditPerson.vue';
+import type { Person } from '~/components/EditPerson.vue';
 
 const query = ref('');
 const open = ref(false);

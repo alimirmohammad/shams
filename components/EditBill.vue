@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { z } from 'zod';
-import { BillWithId } from '~/pages/[userId]/loan.vue';
+import type { BillWithId } from '~/pages/[userId]/loan.vue';
 
 const schema = z.object({
   amount: z

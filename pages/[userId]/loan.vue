@@ -87,8 +87,8 @@
 
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { Bill } from '~/components/EditBill.vue';
-import { Filters } from '~/components/FilterFields.vue';
+import type { Bill } from '~/components/EditBill.vue';
+import type { Filters } from '~/components/FilterFields.vue';
 
 type Modal = 'edit-bill' | 'delete-bill' | 'edit-filters' | 'none';
 export type BillWithId = (typeof bills)['value'][number];
