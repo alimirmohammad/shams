@@ -4,6 +4,16 @@
       <IconText title="فیلتر" @click="modal = 'edit-filters'">
         <FilterIcon />
       </IconText>
+      <select
+        v-if="loans.length > 0"
+        class="select select-primary select-sm text-left loan-select"
+        :value="selectedLoanId ?? activeLoanId"
+        @change="selectedLoanId = +($event.target as HTMLSelectElement).value"
+      >
+        <option v-for="loan in loans" :key="loan.id" :value="loan.id">
+          {{ convertToJalaliString(loan.date) }}
+        </option>
+      </select>
       <PriceSummary title="مانده وام" :price="debt" />
     </template>
     <div
@@ -97,6 +107,7 @@ const route = useRoute();
 const modal = ref<Modal>('none');
 const selectedBill = ref<BillWithId | null>(null);
 const activeIndex = ref<number | null>(null);
+const selectedLoanId = ref<number | null>(null);
 const userId = computed(() => route.params.userId);
 const filters = reactive<{
   from?: Date;
@@ -113,17 +124,22 @@ const searchParams = computed(() => {
   const result = new URLSearchParams();
   result.append('from', filters.from?.toISOString() ?? '');
   result.append('to', filters.to?.toISOString() ?? '');
+  if (selectedLoanId.value !== null) {
+    result.append('loanId', String(selectedLoanId.value));
+  }
   return result;
 });
 
 const { data, error, isError, isLoading } = useQuery({
-  queryKey: ['loan', userId, filters],
+  queryKey: ['loan', userId, filters, selectedLoanId],
   queryFn: () =>
     $fetch(`/api/people/${userId.value}/loan-bills?${searchParams.value}`),
 });
 
 const bills = computed(() => data.value?.bills ?? []);
 const debt = computed(() => data.value?.debt ?? 0);
+const loans = computed(() => data.value?.loans ?? []);
+const activeLoanId = computed(() => data.value?.activeLoanId);
 
 function openDeleteModal(bill: BillWithId) {
   selectedBill.value = bill;
@@ -150,7 +166,7 @@ const {
   isError: upsertIsError,
   isLoading: upsertIsLoading,
 } = useMutation({
-  mutationFn: (bill: Bill & { id?: number }) =>
+  mutationFn: (bill: Bill & { id?: number; loanId?: number }) =>
     $fetch(`/api/people/${userId.value}/loan-bills`, {
       method: 'POST',
       body: bill,
@@ -176,10 +192,10 @@ const {
 
 function editBill(values: Bill, id?: number) {
   mutate(
-    { ...values, id },
+    { ...values, id, loanId: selectedLoanId.value ?? activeLoanId.value },
     {
       onSuccess: () => (modal.value = 'none'),
-    }
+    },
   );
 }
 
@@ -202,4 +218,18 @@ watchEffect(() => {
     selectedBill.value = null;
   }
 });
+
+watch(selectedLoanId, () => {
+  activeIndex.value = null;
+});
 </script>
+
+<style scoped>
+.loan-select {
+  background-position:
+    calc(100% - 12px) 50%,
+    calc(100% - 16px) 50%;
+  padding-left: 0.75rem;
+  padding-right: 2.5rem;
+}
+</style>
