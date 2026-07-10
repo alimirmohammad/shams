@@ -90,7 +90,7 @@ export default defineEventHandler(async event => {
       })
     : null;
 
-  const debt = calculateDebt(loanForDebt ? [loanForDebt] : []);
+  const debt = loanForDebt ? calculateDebt(loanForDebt) : 0;
 
   return {
     id: user.id,

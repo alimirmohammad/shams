@@ -103,9 +103,9 @@ function onSubmit(values: unknown): void {
 
 const queryClient = useQueryClient();
 
-const { data: eligibleList } = useQuery({
-  queryKey: ['eligible'],
-  queryFn: () => $fetch('/api/people/eligible'),
+const { data: peopleList } = useQuery({
+  queryKey: ['people'],
+  queryFn: () => $fetch('/api/people'),
 });
 
 const { mutate, isLoading, error, isError } = useMutation({
@@ -116,7 +116,7 @@ const { mutate, isLoading, error, isError } = useMutation({
     }),
   onSuccess: () =>
     Promise.allSettled([
-      queryClient.invalidateQueries(['eligible']),
+      queryClient.invalidateQueries(['people']),
       queryClient.invalidateQueries(['loans']),
     ]),
 });
@@ -135,8 +135,8 @@ const buttonText = computed(() => (props.loan ? 'ویرایش' : 'افزودن')
 
 const users = computed(
   () =>
-    eligibleList.value
-      ?.map(user => ({
+    peopleList.value?.users
+      .map(user => ({
         text: `${user.firstName} ${user.lastName}`,
         value: user.id.toString(),
       }))
