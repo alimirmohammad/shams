@@ -108,10 +108,21 @@ type Modal = 'edit-bill' | 'delete-bill' | 'edit-filters' | 'none';
 export type BillWithId = (typeof bills)['value'][number];
 
 const route = useRoute();
+const router = useRouter();
 const modal = ref<Modal>('none');
 const selectedBill = ref<BillWithId | null>(null);
 const activeIndex = ref<number | null>(null);
-const selectedLoanId = ref<number | null>(null);
+const selectedLoanId = computed<number | null>({
+  get: () => {
+    const raw = route.query.loanId;
+    return raw ? Number(raw) : null;
+  },
+  set: id => {
+    router.replace({
+      query: { ...route.query, loanId: id === null ? undefined : String(id) },
+    });
+  },
+});
 const userId = computed(() => route.params.userId);
 const filters = reactive<{
   from?: Date;

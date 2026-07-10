@@ -43,7 +43,10 @@
               :description="loan.description"
               :username="`${loan.user.firstName} ${loan.user.lastName}`"
               :expanded="index === activeIndex"
-              :link="{ text: 'مشاهده اقساط', url: `/${loan.user.id}/loan` }"
+              :link="{
+                text: 'مشاهده اقساط',
+                url: `/${loan.user.id}/loan?loanId=${loan.id}`,
+              }"
               @click="activeIndex = index"
               @delete="openDeleteModal(loan)"
               @edit="openEditModal(loan)"
@@ -93,7 +96,20 @@ const tabs: { label: string; value: Tab }[] = [
   { label: 'تسویه نشده', value: 'unsettled' },
   { label: 'تسویه شده', value: 'settled' },
 ];
-const activeTab = ref<Tab>('unsettled');
+
+const route = useRoute();
+const router = useRouter();
+
+function isTab(value: unknown): value is Tab {
+  return value === 'unsettled' || value === 'settled';
+}
+
+const activeTab = computed<Tab>({
+  get: () => (isTab(route.query.tab) ? route.query.tab : 'unsettled'),
+  set: tab => {
+    router.replace({ query: { ...route.query, tab } });
+  },
+});
 
 const {
   data,
