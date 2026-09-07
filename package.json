@@ -14,7 +14,7 @@
     "@vite-pwa/assets-generator": "^0.0.3",
     "@vite-pwa/nuxt": "^1.1.1",
     "daisyui": "^2.51.6",
-    "nuxt": "^3.21.8",
+    "nuxt": "3.21.9",
     "prisma": "^7.8.0",
     "sass": "^1.100.0",
     "tailwindcss-flip": "^1.0.0",
