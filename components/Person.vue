@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
-import { Person } from '~/components/EditPerson.vue';
+import type { Person } from '~/components/EditPerson.vue';
 
 const route = useRoute();
 const router = useRouter();

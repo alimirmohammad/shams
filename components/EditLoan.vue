@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { z } from 'zod';
-import { SelectedLoan } from '~/pages/loans.vue';
+import type { SelectedLoan } from '~/pages/loans.vue';
 import ToastError from './ToastError.vue';
 
 type Props = {

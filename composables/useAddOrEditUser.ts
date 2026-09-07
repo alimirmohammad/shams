@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { Person } from '~/components/EditPerson.vue';
+import type { Person } from '~/components/EditPerson.vue';
 
 type PersonPayload = Person & { id?: number };
 

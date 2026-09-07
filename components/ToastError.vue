@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { NuxtError } from 'nuxt/app';
+import type { NuxtError } from 'nuxt/app';
 
 type Props = {
   error: unknown;
