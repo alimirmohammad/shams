@@ -1,5 +1,4 @@
 import { prisma } from '~/server/utils/prisma';
-import { calculateDebt } from '~~/server/utils/debt';
 
 export default defineEventHandler(async event => {
   protectRoute(event);
@@ -13,7 +12,7 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const { date, amount, description, id } = await readBody(event);
+  const { date, amount, description, id, loanId } = await readBody(event);
 
   if (!date || !amount)
     throw createError({
@@ -21,55 +20,49 @@ export default defineEventHandler(async event => {
       message: 'پر کردن همه فیلدها الزامی است.',
     });
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: +userId,
-    },
-    select: {
-      loans: {
-        take: 1,
-        orderBy: {
-          date: 'desc',
-        },
-        select: {
-          id: true,
-          amount: true,
-          bills: {
-            select: {
-              amount: true,
+  const loan =
+    loanId && !isNaN(+loanId)
+      ? await prisma.loan.findFirst({
+          where: { id: +loanId, userId: +userId },
+          select: {
+            id: true,
+            amount: true,
+            bills: {
+              select: {
+                id: true,
+                amount: true,
+              },
             },
           },
-        },
-      },
-    },
-  });
+        })
+      : await prisma.loan.findFirst({
+          where: { userId: +userId },
+          orderBy: { date: 'desc' },
+          select: {
+            id: true,
+            amount: true,
+            bills: {
+              select: {
+                id: true,
+                amount: true,
+              },
+            },
+          },
+        });
 
-  if (!user) {
-    throw createError({
-      statusCode: 404,
-      message: 'کاربر مورد نظر یافت نشد.',
-    });
-  }
-
-  const lastLoan = user.loans.at(0);
-
-  if (!lastLoan) {
+  if (!loan) {
     throw createError({
       statusCode: 404,
       message: 'وام مورد نظر یافت نشد.',
     });
   }
 
-  const debt = calculateDebt(user.loans);
+  const totalPaid = loan.bills
+    .filter(bill => bill.id !== id)
+    .reduce((acc, bill) => acc + bill.amount, 0);
+  const remaining = loan.amount - totalPaid;
 
-  if (debt === 0) {
-    throw createError({
-      statusCode: 400,
-      message: 'وام قبلا تسویه شده است.',
-    });
-  }
-
-  if (debt < amount) {
+  if (amount > remaining) {
     throw createError({
       statusCode: 400,
       message: 'مقدار قسط بیش از حد مجاز است.',
@@ -103,7 +96,7 @@ export default defineEventHandler(async event => {
       ...payload,
       loan: {
         connect: {
-          id: lastLoan.id,
+          id: loan.id,
         },
       },
     },

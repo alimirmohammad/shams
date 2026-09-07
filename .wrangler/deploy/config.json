@@ -1,9 +1,1 @@
-{
-  "configPath": "../../.output/server/wrangler.json",
-  "observability": {
-    "logs": {
-      "enabled": true,
-      "invocation_logs": true
-    }
-  }
-}
+{"configPath":"../../.output/server/wrangler.json"}

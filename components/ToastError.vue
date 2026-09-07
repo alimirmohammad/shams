@@ -18,7 +18,7 @@ const { showToast, isToastVisible } = useToast();
 
 const errorText = computed(
   () =>
-    (props.error as NuxtError)?.data?.message ??
+    ((props.error as NuxtError)?.data as { message?: string })?.message ??
     'متاسفانه مشکلی پیش آمده، دوباره تلاش کنید.'
 );
 

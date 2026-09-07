@@ -1,4 +1,5 @@
 import { prisma } from '~/server/utils/prisma';
+import { calculateTotalDebt } from '~/server/utils/debt';
 
 export default defineEventHandler(async event => {
   protectRoute(event);
@@ -11,7 +12,7 @@ export default defineEventHandler(async event => {
       lastName: true,
       numOfShares: true,
       loans: {
-        take: 1,
+        take: 3,
         orderBy: {
           date: 'desc',
         },
@@ -34,7 +35,7 @@ export default defineEventHandler(async event => {
       firstName,
       lastName,
       numOfShares,
-      debt: calculateDebt(loans),
+      debt: calculateTotalDebt(loans),
     })
   );
 

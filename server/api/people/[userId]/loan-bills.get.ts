@@ -8,6 +8,7 @@ export default defineEventHandler(async event => {
   const searchParams = getQuery(event);
   const from = (searchParams.from as string) || undefined;
   const to = (searchParams.to as string) || undefined;
+  const loanId = (searchParams.loanId as string) || undefined;
   if (!userId || isNaN(+userId) || !Number.isInteger(+userId)) {
     throw createError({
       statusCode: 400,
@@ -26,11 +27,28 @@ export default defineEventHandler(async event => {
       lastName: true,
       numOfShares: true,
       phoneNumber: true,
-      loans: {
-        take: 1,
-        orderBy: {
-          date: 'desc',
-        },
+    },
+  });
+
+  if (!user) {
+    throw createError({
+      statusCode: 404,
+      message: 'کاربر مورد نظر یافت نشد.',
+    });
+  }
+
+  const loanOptions = await prisma.loan.findMany({
+    where: { userId: +userId },
+    orderBy: { date: 'desc' },
+    select: { id: true, date: true, amount: true },
+  });
+
+  const activeLoanId =
+    loanId && !isNaN(+loanId) ? +loanId : loanOptions.at(0)?.id;
+
+  const activeLoan = activeLoanId
+    ? await prisma.loan.findFirst({
+        where: { id: activeLoanId, userId: +userId },
         select: {
           id: true,
           amount: true,
@@ -55,32 +73,24 @@ export default defineEventHandler(async event => {
             },
           },
         },
-      },
-    },
-  });
+      })
+    : null;
 
-  if (!user) {
-    throw createError({
-      statusCode: 404,
-      message: 'کاربر مورد نظر یافت نشد.',
-    });
-  }
-
-  const loans = await prisma.loan.findMany({
-    where: { userId: +userId },
-    take: 1,
-    orderBy: { date: 'desc' },
-    select: {
-      amount: true,
-      bills: {
+  const loanForDebt = activeLoanId
+    ? await prisma.loan.findFirst({
+        where: { id: activeLoanId, userId: +userId },
         select: {
           amount: true,
+          bills: {
+            select: {
+              amount: true,
+            },
+          },
         },
-      },
-    },
-  });
+      })
+    : null;
 
-  const debt = calculateDebt(loans);
+  const debt = loanForDebt ? calculateDebt(loanForDebt) : 0;
 
   return {
     id: user.id,
@@ -88,7 +98,9 @@ export default defineEventHandler(async event => {
     lastName: user.lastName,
     phoneNumber: user.phoneNumber,
     numOfShares: user.numOfShares,
-    bills: user.loans.at(0)?.bills,
+    bills: activeLoan?.bills,
     debt,
+    loans: loanOptions,
+    activeLoanId: activeLoan?.id,
   };
 });

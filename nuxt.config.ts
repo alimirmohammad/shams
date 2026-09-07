@@ -5,6 +5,14 @@ export default defineNuxtConfig({
     preset: 'cloudflare_module',
     cloudflare: {
       deployConfig: true,
+      wrangler: {
+        observability: {
+          logs: {
+            enabled: true,
+            invocation_logs: true,
+          },
+        },
+      },
     },
     bundledStorage: [],
     experimental: {
@@ -12,6 +20,9 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
+  experimental: {
+    viteEnvironmentApi: true,
+  },
   css: ['@/assets/main.css'],
   modules: [
     '@nuxtjs/tailwindcss',
@@ -64,7 +75,7 @@ export default defineNuxtConfig({
       installPrompt: true,
     },
     devOptions: {
-      enabled: true,
+      enabled: false,
       suppressWarnings: true,
       navigateFallbackAllowlist: [/^\/$/],
       type: 'module',
