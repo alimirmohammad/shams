@@ -1,22 +1,21 @@
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '~/server/generated/prisma/client';
 import type { PrismaClient as PrismaClientType } from '~/server/generated/prisma/client';
-import { withAccelerate } from '@prisma/extension-accelerate';
 
 declare const process: { env: Record<string, string | undefined> };
 
 function createPrismaClient() {
-  return new PrismaClient({
-    accelerateUrl: process.env.DATABASE_URL!,
-  }).$extends(withAccelerate());
+  const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL!,
+  });
+
+  return new PrismaClient({ adapter });
 }
 
-type ExtendedPrismaClient = ReturnType<typeof createPrismaClient>;
-
-let _prisma: ExtendedPrismaClient | undefined;
+let _prisma: PrismaClientType | undefined;
 
 // On Cloudflare Workers, env vars are only available during a request,
 // so the client must be created lazily on first use.
-// Typed as base PrismaClient (not extended) so TypeScript properly infers select return types.
 export const prisma = new Proxy({} as PrismaClientType, {
   get(_target, prop) {
     _prisma ??= createPrismaClient();

@@ -3,6 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-09-19',
   nitro: {
     preset: 'cloudflare_module',
+    // `pg-native` is an optional native addon. Cloudflare uses pg's JavaScript
+    // driver, but Nitro still needs a resolvable module while bundling `pg`.
+    alias: {
+      'pg-native': 'unenv/mock/proxy-cjs',
+    },
     cloudflare: {
       deployConfig: true,
       wrangler: {
