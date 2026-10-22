@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="app-page">
     <Header class="font-fa" :title="title">
       <div
         v-if="personIsLoading"
@@ -18,19 +18,25 @@
         </IconText>
       </template>
     </Header>
-    <div
-      v-if="personIsLoading"
-      class="flex items-center justify-center w-full h-full bg-white"
-    >
-      <LoadingRipple />
-    </div>
-    <main v-else class="bg-white text-center overflow-auto shadow-xl p-4 pb-24">
-      <Tabs :tabs="tabs" :active-tab="$route.path" class="mx-auto mb-4" />
-      <div class="flex flex-row items-center justify-between mb-4">
-        <slot name="header" />
+    <div class="page-content">
+      <div
+        v-if="personIsLoading"
+        class="flex items-center justify-center min-h-0 bg-white"
+      >
+        <LoadingRipple />
       </div>
-      <slot />
-    </main>
+      <main
+        v-else
+        class="bg-white text-center overflow-auto shadow-xl p-4 floating-action-content"
+      >
+        <Tabs :tabs="tabs" :active-tab="$route.path" class="mx-auto mb-4" />
+        <div class="flex flex-row items-center justify-between mb-4">
+          <slot name="header" />
+        </div>
+        <slot />
+      </main>
+      <slot v-if="!personIsLoading" name="actions" />
+    </div>
     <slot name="bottom-sheet" />
     <BottomSheet
       v-if="isAdmin"
@@ -107,10 +113,3 @@ function editPerson(person: Person) {
   });
 }
 </script>
-
-<style scoped>
-.page {
-  @apply h-screen grid grid-cols-1 relative;
-  grid-template-rows: auto 1fr;
-}
-</style>

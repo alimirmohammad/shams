@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'error-border': errorMessage }">
+  <div class="date-picker" :class="{ 'error-border': errorMessage }">
     <label :for="id" class="label">
       <span
         class="label-text label-3 text-gray-500"
@@ -60,6 +60,20 @@ const shouldValidate = computed(() => Boolean(errorMessage.value));
 </script>
 
 <style scoped>
+.date-picker :deep(.pdp.pdp-modal .pdp-picker) {
+  top: 50%;
+  top: calc(var(--sheet-top, 0px) + var(--sheet-height, var(--viewport-height)) / 2);
+  max-width: calc(100vw - 2rem - var(--safe-area-left) - var(--safe-area-right));
+  max-height: calc(100vh - 2rem);
+  max-height: calc(
+    var(--sheet-height, var(--viewport-height)) -
+      2 * max(1rem, var(--safe-area-top), var(--safe-area-bottom))
+  );
+  margin-top: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
 .error-border {
   :deep(.pdp) {
     @apply border border-red-500 rounded-md;

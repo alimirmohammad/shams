@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="app-page">
     <Header title="سهام‌داران">
       <template #startAction>
         <IconText title="افزودن" @click="open = true">
@@ -94,10 +94,3 @@ function createPerson(person: Person) {
   mutatePerson(person, () => (open.value = false));
 }
 </script>
-
-<style scoped>
-.page {
-  @apply h-screen grid grid-cols-1;
-  grid-template-rows: auto 1fr auto;
-}
-</style>

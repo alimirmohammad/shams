@@ -7,7 +7,78 @@
 @layer base {
   html {
     font-family: 'IRANSansX', system-ui, sans-serif;
+    --viewport-height: 100vh;
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
   }
+}
+
+@supports (height: 100dvh) {
+  html {
+    --viewport-height: 100dvh;
+  }
+}
+
+/* Keep the header and footer visible; only the middle row scrolls. */
+.app-page {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100vh;
+  height: 100dvh;
+  padding-top: var(--safe-area-top);
+  padding-right: var(--safe-area-right);
+  padding-left: var(--safe-area-left);
+  background: white;
+}
+
+.app-page > main,
+.page-content > main {
+  min-width: 0;
+  min-height: 0;
+  overscroll-behavior-y: contain;
+}
+
+/* Floating actions belong to this area, above any footer navigation. */
+.page-content {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+
+.floating-action-content {
+  padding-bottom: calc(6rem + var(--safe-area-bottom));
+  scroll-padding-bottom: calc(6rem + var(--safe-area-bottom));
+}
+
+.bottom-navigation {
+  padding-bottom: calc(0.25rem + var(--safe-area-bottom));
+}
+
+/* Documents and forms can grow and scroll on short screens. */
+.viewport-document {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: var(--safe-area-top);
+  padding-right: var(--safe-area-right);
+  padding-bottom: var(--safe-area-bottom);
+  padding-left: var(--safe-area-left);
+}
+
+.auth-page {
+  padding-top: calc(5rem + var(--safe-area-top));
+  padding-right: calc(1rem + var(--safe-area-right));
+  padding-bottom: calc(5rem + var(--safe-area-bottom));
+  padding-left: calc(1rem + var(--safe-area-left));
+}
+
+.report-content {
+  padding-bottom: calc(1rem + var(--safe-area-bottom));
 }
 
 .font-fa {

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="calc-width absolute"
-    :class="hasBottomSheet ? 'bottom-20' : 'bottom-6'"
+    class="floating-action"
+    :class="{ 'above-navigation': aboveNavigation }"
   >
     <slot />
   </div>
@@ -9,14 +9,22 @@
 
 <script setup lang="ts">
 type Props = {
-  hasBottomSheet?: boolean;
+  aboveNavigation?: boolean;
 };
 
 defineProps<Props>();
 </script>
 
 <style scoped>
-.calc-width {
-  width: calc(100% - 2rem);
+.floating-action {
+  position: absolute;
+  inset-inline: 1rem;
+  bottom: calc(1.5rem + var(--safe-area-bottom));
+  z-index: 10;
+}
+
+.above-navigation {
+  /* The navigation already reserves the bottom safe area. */
+  bottom: 1.5rem;
 }
 </style>

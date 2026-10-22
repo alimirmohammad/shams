@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen bg-primary-300">
+  <div class="viewport-document bg-primary-300">
     <div class="h-[300px] bg-white relative top-sheet">
       <Logo class="absolute top-20 left-1/2 -translate-x-1/2" />
     </div>

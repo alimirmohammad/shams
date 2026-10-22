@@ -1,6 +1,6 @@
 <template>
   <footer
-    class="bg-white border-t border-gray-100 flex flex-row justify-around items-center py-1"
+    class="bottom-navigation bg-white border-t border-gray-100 flex flex-row justify-around items-center py-1"
   >
     <NuxtLink :to="`/${userId}/loan`">
       <IconText title="وام‌ها" :neutral="isLoansNeutral">

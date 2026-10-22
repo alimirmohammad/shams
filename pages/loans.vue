@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="app-page">
     <Header title="وام‌ها">
       <template #startAction>
         <IconText title="افزودن" @click="modal = 'edit-loan'">
@@ -191,10 +191,3 @@ watchEffect(() => {
   }
 });
 </script>
-
-<style scoped>
-.page {
-  @apply h-screen grid grid-cols-1;
-  grid-template-rows: auto 1fr auto;
-}
-</style>

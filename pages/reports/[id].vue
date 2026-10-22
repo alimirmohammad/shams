@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="app-page">
     <Header :title="data?.title ?? 'گزارش'">
       <div
         v-if="isLoading"
@@ -19,7 +19,7 @@
     >
       <LoadingRipple />
     </div>
-    <main v-else class="bg-white overflow-auto shadow-xl p-4 pt-8">
+    <main v-else class="bg-white overflow-auto shadow-xl p-4 pt-8 report-content">
       <p class="body-1 text-gray-900 whitespace-pre-wrap">
         {{ data?.description }}
       </p>
@@ -39,10 +39,3 @@ const { data, error, isError, isLoading } = useQuery({
   queryFn: () => $fetch(`/api/reports/${id.value}`),
 });
 </script>
-
-<style scoped>
-.page {
-  @apply h-screen grid grid-cols-1 relative;
-  grid-template-rows: auto 1fr;
-}
-</style>

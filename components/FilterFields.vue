@@ -5,12 +5,14 @@
       label="از"
       :initialValue="from?.toISOString()"
       class="mb-6"
+      modal
     />
     <PersianDatePicker
       id="to"
       label="تا"
       :initialValue="to?.toISOString()"
       class="mb-6"
+      modal
     />
     <Button block type="submit" :loading="loading"> اعمال فیلتر </Button>
   </Form>

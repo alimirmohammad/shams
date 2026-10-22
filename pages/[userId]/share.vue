@@ -28,14 +28,16 @@
       </ul>
       <EmptyState v-else />
     </template>
-    <FixedBottom v-if="isAdmin">
-      <Button block @click="modal = 'edit-bill'">
-        افزودن فیش
-        <template #icon>
-          <AddIcon white />
-        </template>
-      </Button>
-    </FixedBottom>
+    <template #actions>
+      <FixedBottom v-if="isAdmin">
+        <Button block @click="modal = 'edit-bill'">
+          افزودن فیش
+          <template #icon>
+            <AddIcon white />
+          </template>
+        </Button>
+      </FixedBottom>
+    </template>
     <template #bottom-sheet>
       <BottomSheet
         v-if="isAdmin"
@@ -65,7 +67,6 @@
       </BottomSheet>
       <BottomNavigationRestricted v-else />
       <BottomSheet
-        overflow
         :open="modal === 'edit-filters'"
         @close="modal = 'none'"
       >

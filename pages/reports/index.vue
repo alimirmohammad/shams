@@ -1,29 +1,31 @@
 <template>
-  <div class="page">
+  <div class="app-page">
     <Header title="گزارشات" />
-    <div
-      v-if="isLoading"
-      class="flex items-center justify-center w-full h-full bg-white"
-    >
-      <LoadingRipple />
-    </div>
-    <main
-      v-else
-      class="bg-white text-center overflow-auto shadow-xl p-4 pt-10 pb-24"
-    >
-      <ul v-if="reports.length > 0" class="flex flex-col gap-4">
-        <li v-for="report in reports" :key="report.id">
-          <ItemCard
-            :title="report.title"
-            :description="report.description"
-            :link="{ text: 'مشاهده گزارش', url: `/reports/${report.id}` }"
-            @delete="openDeleteModal(report)"
-            @edit="openEditModal(report)"
-          />
-        </li>
-      </ul>
-      <EmptyState v-else />
-      <FixedBottom v-if="isAdmin" has-bottom-sheet>
+    <div class="page-content">
+      <div
+        v-if="isLoading"
+        class="flex items-center justify-center w-full h-full bg-white"
+      >
+        <LoadingRipple />
+      </div>
+      <main
+        v-else
+        class="bg-white text-center overflow-auto shadow-xl p-4 pt-10 floating-action-content"
+      >
+        <ul v-if="reports.length > 0" class="flex flex-col gap-4">
+          <li v-for="report in reports" :key="report.id">
+            <ItemCard
+              :title="report.title"
+              :description="report.description"
+              :link="{ text: 'مشاهده گزارش', url: `/reports/${report.id}` }"
+              @delete="openDeleteModal(report)"
+              @edit="openEditModal(report)"
+            />
+          </li>
+        </ul>
+        <EmptyState v-else />
+      </main>
+      <FixedBottom v-if="isAdmin" above-navigation>
         <Button block @click="modal = 'edit-report'">
           ثبت گزارش
           <template #icon>
@@ -31,7 +33,7 @@
           </template>
         </Button>
       </FixedBottom>
-    </main>
+    </div>
     <BottomNavigation v-if="isAdmin" />
     <BottomNavigationRestricted v-else />
     <BottomSheet
@@ -119,10 +121,3 @@ watchEffect(() => {
   }
 });
 </script>
-
-<style scoped>
-.page {
-  @apply h-screen grid grid-cols-1 relative;
-  grid-template-rows: auto 1fr auto;
-}
-</style>
