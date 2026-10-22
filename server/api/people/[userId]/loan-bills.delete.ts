@@ -1,4 +1,4 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
   protectRoute(event);
@@ -20,6 +20,7 @@ export default defineEventHandler(async event => {
       message: 'پر کردن همه فیلدها الزامی است.',
     });
 
+  const prisma = getPrisma(event);
   await prisma.loanBill.delete({
     where: { id },
   });

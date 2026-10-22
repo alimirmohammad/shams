@@ -1,4 +1,4 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
   protectRoute(event);
@@ -11,6 +11,7 @@ export default defineEventHandler(async event => {
     });
   }
 
+  const prisma = getPrisma(event);
   const report = await prisma.report.findUnique({
     where: {
       id: +id,

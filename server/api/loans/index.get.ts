@@ -1,4 +1,4 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 import { Prisma } from '~/server/generated/prisma/client';
 
 const PAGE_SIZE = 15;
@@ -32,6 +32,7 @@ export default defineEventHandler(async event => {
       ? Prisma.sql`HAVING ${debtExpr} <= 0`
       : Prisma.sql`HAVING ${debtExpr} > 0`;
 
+  const prisma = getPrisma(event);
   // Fetch one extra row to know whether there is a next page.
   const rows = await prisma.$queryRaw<LoanRow[]>`
     SELECT

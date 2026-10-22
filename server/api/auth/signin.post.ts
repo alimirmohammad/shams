@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs';
 import { SignJWT } from 'jose';
 
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
   const config = useRuntimeConfig();
@@ -17,6 +17,7 @@ export default defineEventHandler(async event => {
       message: 'پر کردن همه فیلدها الزامی است.',
     });
 
+  const prisma = getPrisma(event);
   const user = await prisma.user.findFirst({ where: { phoneNumber } });
   if (!user)
     throw createError({

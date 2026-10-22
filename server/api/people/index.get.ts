@@ -1,10 +1,11 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 import { calculateTotalDebt } from '~/server/utils/debt';
 
 export default defineEventHandler(async event => {
   protectRoute(event);
   protectAdminRoute(event);
 
+  const prisma = getPrisma(event);
   const users = await prisma.user.findMany({
     select: {
       id: true,

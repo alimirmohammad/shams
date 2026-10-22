@@ -1,4 +1,4 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 import { userSelect } from '~/server/middleware/auth';
 import protectAdminRoute from '~/server/utils/protectAdminRoute';
 import protectRoute from '~/server/utils/protectRoute';
@@ -16,6 +16,7 @@ export default defineEventHandler(async event => {
       message: 'پر کردن همه فیلدها الزامی است.',
     });
 
+  const prisma = getPrisma(event);
   const user = await prisma.user.update({
     where: { id },
     data: {

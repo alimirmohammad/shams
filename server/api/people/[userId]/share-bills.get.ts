@@ -1,4 +1,4 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 import protectAdminOrSelfRoute from '~/server/utils/protectAdminOrSelfRoute';
 
 export default defineEventHandler(async event => {
@@ -16,6 +16,7 @@ export default defineEventHandler(async event => {
   }
   protectAdminOrSelfRoute(event, +userId);
 
+  const prisma = getPrisma(event);
   const user = await prisma.user.findUnique({
     where: {
       id: +userId,

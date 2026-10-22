@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       wrangler: {
+        name: 'shams',
         observability: {
           logs: {
             enabled: true,

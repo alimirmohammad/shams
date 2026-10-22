@@ -1,3 +1,4 @@
+import { getPrisma } from '~/server/utils/prisma';
 import { hash } from 'bcryptjs';
 
 export default defineEventHandler(async event => {
@@ -10,6 +11,7 @@ export default defineEventHandler(async event => {
     });
   }
   const hashedPassword = await hash(password, 12);
+  const prisma = getPrisma(event);
   await prisma.user.update({
     where: { id: user.id },
     data: { password: hashedPassword, mustChangePassword: false },

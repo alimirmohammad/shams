@@ -1,24 +1,45 @@
+import type { H3Event } from 'h3';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '~/server/generated/prisma/client';
-import type { PrismaClient as PrismaClientType } from '~/server/generated/prisma/client';
 
 declare const process: { env: Record<string, string | undefined> };
 
-function createPrismaClient() {
-  const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
-  });
+export function getPrisma(event: H3Event): PrismaClient {
+  if (event.context.prismaDisconnect) {
+    throw new Error('The request database client has already been closed');
+  }
 
-  return new PrismaClient({ adapter });
+  if (!event.context.prisma) {
+    // Read bindings during this request; a Worker isolate serves many requests.
+    const connectionString = event.context.cloudflare?.env?.DATABASE_URL
+      ?? process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('DATABASE_URL is not configured');
+    }
+
+    const adapter = new PrismaPg({
+      connectionString,
+      max: 2,
+      connectionTimeoutMillis: 5_000,
+      idleTimeoutMillis: 1_000,
+      // Prisma Postgres's pooler rejects statement_timeout startup parameters.
+      // Bound query waits in the pg client instead.
+      query_timeout: 15_000,
+    });
+    event.context.prisma = new PrismaClient({ adapter });
+  }
+
+  return event.context.prisma;
 }
 
-let _prisma: PrismaClientType | undefined;
+export function disconnectPrisma(event: H3Event): Promise<void> | undefined {
+  // Do not create a client for requests that never access the database.
+  if (!event.context.prisma) return;
 
-// On Cloudflare Workers, env vars are only available during a request,
-// so the client must be created lazily on first use.
-export const prisma = new Proxy({} as PrismaClientType, {
-  get(_target, prop) {
-    _prisma ??= createPrismaClient();
-    return Reflect.get(_prisma, prop);
-  },
-});
+  // Response hooks and socket completion can both fire for the same request.
+  // Keep the promise on that request so disposal happens exactly once.
+  event.context.prismaDisconnect ??= Promise.resolve().then(() =>
+    event.context.prisma!.$disconnect(),
+  );
+  return event.context.prismaDisconnect;
+}

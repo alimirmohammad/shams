@@ -1,4 +1,4 @@
-import { prisma } from '~/server/utils/prisma';
+import { getPrisma } from '~/server/utils/prisma';
 
 export default defineEventHandler(async event => {
   protectRoute(event);
@@ -33,6 +33,7 @@ export default defineEventHandler(async event => {
     description: true,
   };
 
+  const prisma = getPrisma(event);
   if (id) {
     return prisma.shareBill.update({
       where: { id },
