@@ -21,6 +21,12 @@ export default defineNuxtConfig({
       },
     },
     bundledStorage: [],
+    // Workbox's navigation fallback must exist in the precache. A Worker build
+    // otherwise emits no HTML, causing the service worker to fail at startup
+    // and leaving returning clients on an older app version.
+    prerender: {
+      routes: ['/'],
+    },
     experimental: {
       wasm: true,
     },
@@ -75,6 +81,7 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: '/',
+      navigateFallbackDenylist: [/^\/api(?:\/|$)/],
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
     client: {

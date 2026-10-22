@@ -69,3 +69,24 @@ Rollback does not change database data. This fix contains no schema migrations.
 - Tests exercise the built Nitro Worker with its deployed compatibility settings,
   verify request isolation and cleanup on error, and reproduce a hosted pooler's
   rejection of unsupported startup parameters.
+
+## PWA navigation fallback
+
+Keep `/` in `nitro.prerender.routes`. A normal Worker build does not emit
+`index.html`; without prerendering it, Workbox's `navigateFallback: '/'` refers
+to a URL absent from its precache. The generated service worker then throws
+`non-precached-url` during startup and cannot replace an older installed worker.
+The PWA module maps the generated `index.html` to `/` in its precache manifest.
+API navigations bypass this HTML fallback.
+
+The PWA tests execute the generated service worker with its actual Workbox
+runtime, check shell/build metadata consistency, and exercise repeated offline
+loan deep-link navigations. Run `pnpm build` before `pnpm test`.
+
+The fix was deployed at 100% on 22 October 2026 as version
+`86a98974-7993-4e3f-b483-8def68f7d8d5`. All 24 tests and the Wrangler packaging
+check passed. All 57 precache entries returned HTTP 200 on the staged version;
+production serves the same tested service worker and shell, and the loan deep
+link returned HTTP 200 on three repeated requests. The signed-in Chrome page
+loaded loan 61 with a clean console after the update. The preceding production
+version was `998d8843-40ad-4dff-8e63-8b7b77fd3a0c`.
