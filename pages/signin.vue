@@ -2,7 +2,7 @@
   <Form
     @submit="onSubmit"
     :validation-schema="loginSchema"
-    class="bg-white viewport-document auth-page text-center"
+    class="bg-white viewport-screen auth-page text-center"
   >
     <Logo class="mx-auto" />
     <h1 class="my-4 text-primary-500 font-bold text-3xl">شمس</h1>
