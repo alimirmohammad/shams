@@ -1,13 +1,13 @@
 <template>
-  <div class="viewport-screen bg-primary-300">
-    <div class="h-[300px] bg-white relative top-sheet">
-      <Logo class="absolute top-20 left-1/2 -translate-x-1/2" />
+  <div class="viewport-screen splash-page bg-primary-300">
+    <div class="bg-white top-sheet">
+      <Logo class="splash-logo" />
     </div>
     <div class="text-white text-center">
-      <h1 class="font-bold text-5xl my-10">شمس</h1>
-      <div class="relative">
-        <Suitcase class="mx-auto" />
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2">
+      <h1 class="splash-title font-bold text-5xl">شمس</h1>
+      <div class="splash-suitcase relative mx-auto">
+        <Suitcase class="w-full h-auto" />
+        <div class="absolute top-1/2 inset-x-0">
           <h4 class="mb-4 headline-2">صندوق خانوادگی</h4>
           <h4 class="label-2">تأسیس ۱۳۷۷/۱/۵</h4>
         </div>
@@ -37,6 +37,26 @@ watchEffect(() => {
 
 <style scoped>
 .top-sheet {
+  display: grid;
+  place-items: center;
+  height: clamp(7rem, var(--viewport-height) * 0.36, 300px);
   border-radius: 0px 0px 200px 200px;
+}
+
+.splash-logo {
+  width: clamp(4rem, var(--viewport-height) * 0.18, 140px);
+  height: auto;
+}
+
+.splash-title {
+  margin-block: clamp(0.75rem, var(--viewport-height) * 0.045, 2.5rem);
+}
+
+.splash-suitcase {
+  width: min(298px, 85%, max(220px, var(--viewport-height) * 0.4));
+}
+
+.splash-page {
+  padding-bottom: calc(1rem + var(--safe-area-bottom));
 }
 </style>
